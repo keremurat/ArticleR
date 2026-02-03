@@ -67,6 +67,9 @@ export function PDFViewer() {
     searchQuery,
     setSearchQuery,
     savedWords,
+    highlights,
+    addHighlight,
+    removeHighlight,
   } = usePDF()
 
   const [isLoading, setIsLoading] = useState(true)
@@ -100,7 +103,26 @@ export function PDFViewer() {
       const range = selection?.getRangeAt(0)
       const rect = range?.getBoundingClientRect()
 
-      if (rect) {
+      if (rect && selectedHighlight) {
+        // If highlight mode is active, save the highlight
+        // Get the PDF page container to calculate relative position
+        const pageContainer = document.querySelector(".react-pdf__Page")
+        if (pageContainer) {
+          const pageRect = pageContainer.getBoundingClientRect()
+          addHighlight({
+            text,
+            color: selectedHighlight.color,
+            pageNumber: currentPage,
+            position: {
+              x: rect.left - pageRect.left,
+              y: rect.top - pageRect.top,
+              width: rect.width,
+              height: rect.height,
+            },
+          })
+        }
+        window.getSelection()?.removeAllRanges()
+      } else if (rect) {
         setSelectedText(text)
         setTooltipPosition({
           x: rect.left + rect.width / 2,
@@ -108,7 +130,7 @@ export function PDFViewer() {
         })
       }
     }
-  }, [])
+  }, [selectedHighlight, currentPage, addHighlight])
 
   // Close tooltip
   const closeTooltip = useCallback(() => {
@@ -244,6 +266,75 @@ export function PDFViewer() {
       document.documentElement.classList.remove("dark")
     }
   }, [isDarkMode])
+
+  // Search highlighting effect
+  useEffect(() => {
+    if (!searchQuery || searchQuery.length < 2) {
+      // Remove all search highlights
+      document.querySelectorAll(".search-highlight").forEach((el) => {
+        const parent = el.parentNode
+        if (parent) {
+          parent.replaceChild(document.createTextNode(el.textContent || ""), el)
+          parent.normalize()
+        }
+      })
+      return
+    }
+
+    // Add search highlights
+    const timer = setTimeout(() => {
+      const textLayer = document.querySelector(".react-pdf__Page__textContent")
+      if (!textLayer) return
+
+      const walker = document.createTreeWalker(textLayer, NodeFilter.SHOW_TEXT)
+      const nodesToHighlight: { node: Text; matches: { start: number; length: number }[] }[] = []
+
+      let node: Node | null
+      while ((node = walker.nextNode())) {
+        const textNode = node as Text
+        const text = textNode.textContent || ""
+        const lowerText = text.toLowerCase()
+        const lowerQuery = searchQuery.toLowerCase()
+        const matches: { start: number; length: number }[] = []
+
+        let index = 0
+        while ((index = lowerText.indexOf(lowerQuery, index)) !== -1) {
+          matches.push({ start: index, length: searchQuery.length })
+          index += searchQuery.length
+        }
+
+        if (matches.length > 0) {
+          nodesToHighlight.push({ node: textNode, matches })
+        }
+      }
+
+      // Apply highlights
+      nodesToHighlight.forEach(({ node, matches }) => {
+        const text = node.textContent || ""
+        const fragment = document.createDocumentFragment()
+        let lastIndex = 0
+
+        matches.forEach(({ start, length }) => {
+          if (start > lastIndex) {
+            fragment.appendChild(document.createTextNode(text.slice(lastIndex, start)))
+          }
+          const mark = document.createElement("mark")
+          mark.className = "search-highlight bg-yellow-300 dark:bg-yellow-600"
+          mark.textContent = text.slice(start, start + length)
+          fragment.appendChild(mark)
+          lastIndex = start + length
+        })
+
+        if (lastIndex < text.length) {
+          fragment.appendChild(document.createTextNode(text.slice(lastIndex)))
+        }
+
+        node.parentNode?.replaceChild(fragment, node)
+      })
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery, currentPage])
 
   // Navigation functions
   const goToPreviousPage = () => setCurrentPage(Math.max(1, currentPage - 1))
@@ -453,7 +544,7 @@ export function PDFViewer() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="rounded-lg bg-card shadow-xl"
+                  className="relative rounded-lg bg-card shadow-xl"
                 >
                   <Page
                     pageNumber={currentPage}
@@ -462,6 +553,30 @@ export function PDFViewer() {
                     renderTextLayer={true}
                     renderAnnotationLayer={true}
                   />
+                  {/* Render saved highlights for current page */}
+                  {highlights
+                    .filter((h) => h.pageNumber === currentPage)
+                    .map((highlight) => (
+                      <div
+                        key={highlight.id}
+                        className="absolute pointer-events-auto cursor-pointer group"
+                        style={{
+                          left: `${highlight.position.x}px`,
+                          top: `${highlight.position.y}px`,
+                          width: `${highlight.position.width}px`,
+                          height: `${highlight.position.height}px`,
+                          backgroundColor: highlight.color,
+                          opacity: 0.4,
+                          mixBlendMode: "multiply",
+                        }}
+                        title={highlight.text}
+                        onClick={() => removeHighlight(highlight.id)}
+                      >
+                        <span className="absolute -top-5 left-0 hidden group-hover:block bg-foreground text-background text-xs px-2 py-1 rounded whitespace-nowrap">
+                          Silmek için tıkla
+                        </span>
+                      </div>
+                    ))}
                 </motion.div>
               </Document>
             </div>

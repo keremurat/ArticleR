@@ -10,6 +10,20 @@ export interface SavedWord {
   createdAt: Date
 }
 
+export interface Highlight {
+  id: string
+  text: string
+  color: string
+  pageNumber: number
+  position: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+  createdAt: Date
+}
+
 interface PDFContextType {
   pdfFile: File | null
   setPdfFile: (file: File | null) => void
@@ -32,6 +46,9 @@ interface PDFContextType {
   toggleDarkMode: () => void
   recentPdfs: { name: string; url: string; lastOpened: Date }[]
   addRecentPdf: (name: string, url: string) => void
+  highlights: Highlight[]
+  addHighlight: (highlight: Omit<Highlight, "id" | "createdAt">) => void
+  removeHighlight: (id: string) => void
 }
 
 const PDFContext = createContext<PDFContextType | null>(null)
@@ -61,6 +78,13 @@ export function PDFProvider({ children }: { children: ReactNode }) {
   const [recentPdfs, setRecentPdfs] = useState<{ name: string; url: string; lastOpened: Date }[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("scholar-recent-pdfs")
+      return saved ? JSON.parse(saved) : []
+    }
+    return []
+  })
+  const [highlights, setHighlights] = useState<Highlight[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("scholar-highlights")
       return saved ? JSON.parse(saved) : []
     }
     return []
@@ -109,6 +133,27 @@ export function PDFProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  const addHighlight = useCallback((highlight: Omit<Highlight, "id" | "createdAt">) => {
+    const newHighlight: Highlight = {
+      ...highlight,
+      id: crypto.randomUUID(),
+      createdAt: new Date(),
+    }
+    setHighlights((prev) => {
+      const updated = [...prev, newHighlight]
+      localStorage.setItem("scholar-highlights", JSON.stringify(updated))
+      return updated
+    })
+  }, [])
+
+  const removeHighlight = useCallback((id: string) => {
+    setHighlights((prev) => {
+      const updated = prev.filter((h) => h.id !== id)
+      localStorage.setItem("scholar-highlights", JSON.stringify(updated))
+      return updated
+    })
+  }, [])
+
   return (
     <PDFContext.Provider
       value={{
@@ -133,6 +178,9 @@ export function PDFProvider({ children }: { children: ReactNode }) {
         toggleDarkMode,
         recentPdfs,
         addRecentPdf,
+        highlights,
+        addHighlight,
+        removeHighlight,
       }}
     >
       {children}

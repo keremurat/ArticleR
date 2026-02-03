@@ -1,6 +1,9 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "schol-ar-scientific-reader",
+  "version": "0.2.0",
+  "description": "Advanced PDF reader for academic papers with translation, highlighting, and search features",
+  "author": "ScholAR Team",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "next build",
