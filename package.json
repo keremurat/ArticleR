@@ -1,8 +1,8 @@
 {
-  "name": "schol-ar-scientific-reader",
+  "name": "articler",
   "version": "0.2.0",
   "description": "Advanced PDF reader for academic papers with translation, highlighting, and search features",
-  "author": "ScholAR Team",
+  "author": "ArticleR Team",
   "license": "MIT",
   "private": true,
   "scripts": {

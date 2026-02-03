@@ -1,4 +1,4 @@
-# 📖 ScholAR - Detaylı Kullanım Kılavuzu
+# 📖 ArticleR - Detaylı Kullanım Kılavuzu
 
 ## İçindekiler
 1. [Hızlı Başlangıç](#1-hızlı-başlangıç)
@@ -21,7 +21,7 @@ Uygulamayı açtığınızda karşınıza bir **hoş geldiniz ekranı** çıkaca
 ```
 ┌─────────────────────────────────────┐
 │                                     │
-│        📚 ScholAR                   │
+│        📚 ArticleR                  │
 │    Bilimsel Makale Okuyucu          │
 │                                     │
 │    [📎 PDF Yükle]                   │
@@ -59,7 +59,7 @@ PDF yüklendiğinde ana okuyucu arayüzü açılır:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  🏠  ScholAR    |   👆 Hover  🌍 Türkçe   🔍 📖 🌓     │  ← Üst Menü
+│  🏠  ArticleR    |   👆 Hover  🌍 Türkçe   🔍 📖 🌓     │  ← Üst Menü
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │              [ PDF İçeriği Burada ]                      │  ← PDF Alanı
@@ -73,7 +73,7 @@ PDF yüklendiğinde ana okuyucu arayüzü açılır:
 
 ## 3. Çeviri Özellikleri
 
-ScholAR'da **3 farklı çeviri modu** vardır:
+ArticleR'da **3 farklı çeviri modu** vardır:
 
 ### 🔹 Mod 1: Seçerek Çeviri (Manuel)
 
@@ -561,7 +561,7 @@ A: Hayır, ama web uygulaması mobil uyumludur. Mobil tarayıcıdan kullanabilir
 **Durum:** 20 makale okumanız gerekiyor.
 
 **Adımlar:**
-1. Her makaleyi ScholAR'da açın
+1. Her makaleyi ArticleR'da açın
 2. `Ctrl+F` ile **anahtar kelimeleri** arayın (örn: "machine learning")
 3. İlgili bölümleri **mavi ile vurgulayın**
 4. Önemli bulguları **sarı ile vurgulayın**
@@ -577,7 +577,7 @@ A: Hayır, ama web uygulaması mobil uyumludur. Mobil tarayıcıdan kullanabilir
 **Durum:** Akademik İngilizce sınavı var, kelime ezberlemek gerekiyor.
 
 **Adımlar:**
-1. Ders materyallerini (PDF) ScholAR'da açın
+1. Ders materyallerini (PDF) ArticleR'da açın
 2. **Her kelimeyi kaydedin**
 3. Sesli telaffuz ile **🔊 Sesli Oku** yapın
 4. Kelime defterini **CSV olarak** export edin
@@ -592,7 +592,7 @@ A: Hayır, ama web uygulaması mobil uyumludur. Mobil tarayıcıdan kullanabilir
 
 ### Sorun mu Yaşıyorsunuz?
 
-1. **GitHub Issues**: [github.com/yourusername/schol-ar-scientific-reader/issues](https://github.com/yourusername/schol-ar-scientific-reader/issues)
+1. **GitHub Issues**: [github.com/yourusername/articler/issues](https://github.com/yourusername/articler/issues)
 2. **E-posta**: support@scholar.com (örnek)
 
 ### Özellik İsteği
@@ -614,6 +614,6 @@ Yeni özellikler için [CHANGELOG.md](CHANGELOG.md) dosyasını takip edin.
 
 **Başarılı okumalar dileriz! 📚✨**
 
-[⬆️ Başa Dön](#-schol-ar---detaylı-kullanım-kılavuzu)
+[⬆️ Başa Dön](#-articler---detaylı-kullanım-kılavuzu)
 
 </div>

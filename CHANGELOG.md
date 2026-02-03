@@ -1,6 +1,6 @@
 # Changelog
 
-Bu dokümanda ScholAR projesindeki tüm önemli değişiklikler kayıt altına alınmaktadır.
+Bu dokümanda ArticleR projesindeki tüm önemli değişiklikler kayıt altına alınmaktadır.
 
 Format [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standardını takip eder.
 
@@ -111,7 +111,7 @@ Format [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standardını ta
 
 ### 🏗️ Proje Yapısı
 ```
-schol-ar-scientific-reader/
+articler/
 ├── app/                    # Next.js App Router
 ├── components/
 │   ├── scholar/           # Ana özellik bileşenleri
@@ -181,8 +181,8 @@ Katkıda bulunmak ister misiniz? [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına g
 
 <div align="center">
 
-**ScholAR** - Akademik başarınız için geliştirildi 📚✨
+**ArticleR** - Akademik başarınız için geliştirildi 📚✨
 
-[Ana Sayfa](README.md) • [Kullanım Kılavuzu](KULLANIM_KILAVUZU.md) • [GitHub](https://github.com/yourusername/schol-ar-scientific-reader)
+[Ana Sayfa](README.md) • [Kullanım Kılavuzu](KULLANIM_KILAVUZU.md) • [GitHub](https://github.com/yourusername/articler)
 
 </div>

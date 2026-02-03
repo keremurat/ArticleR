@@ -1,8 +1,8 @@
-# ScholAR - Bilimsel Makale Okuyucu
+# ArticleR - Bilimsel Makale Okuyucu
 
 <div align="center">
 
-![ScholAR Logo](https://img.shields.io/badge/ScholAR-Scientific%20Reader-blue?style=for-the-badge)
+![ArticleR Logo](https://img.shields.io/badge/ArticleR-Scientific%20Reader-blue?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
@@ -17,7 +17,7 @@
 
 ## 📖 Proje Hakkında
 
-**ScholAR** (Scholar + AR), akademik makaleleri ve bilimsel dokümanları daha verimli okumak için tasarlanmış modern bir PDF okuyucusudur. Özellikle yabancı dilde yazılmış akademik metinleri anlamanızı kolaylaştırmak amacıyla geliştirilmiştir.
+**ArticleR**, akademik makaleleri ve bilimsel dokümanları daha verimli okumak için tasarlanmış modern bir PDF okuyucusudur. Özellikle yabancı dilde yazılmış akademik metinleri anlamanızı kolaylaştırmak amacıyla geliştirilmiştir.
 
 ### 🎯 Projenin Amacı
 
@@ -36,7 +36,7 @@ Akademik araştırmacılar, öğrenciler ve bilim insanları için:
 - PDF'lerde gezinmek ve arama yapmak zahmetlidir
 - Öğrenilen kelimeleri takip etmek zordur
 
-**Çözüm**: ScholAR tüm bu işlevleri tek bir arayüzde birleştirir:
+**Çözüm**: ArticleR tüm bu işlevleri tek bir arayüzde birleştirir:
 - ✅ Anında kelime çevirisi (seçerek veya üzerine gelerek)
 - ✅ Akıllı kelime defteri
 - ✅ Güçlü arama ve vurgulama
@@ -113,8 +113,8 @@ Akademik araştırmacılar, öğrenciler ve bilim insanları için:
 
 ### Adım 1: Projeyi Klonlayın
 ```bash
-git clone https://github.com/yourusername/schol-ar-scientific-reader.git
-cd schol-ar-scientific-reader
+git clone https://github.com/yourusername/articler.git
+cd articler
 ```
 
 ### Adım 2: Bağımlılıkları Yükleyin
@@ -209,7 +209,7 @@ npm start
 ## 📂 Proje Yapısı
 
 ```
-schol-ar-scientific-reader/
+articler/
 ├── app/
 │   ├── layout.tsx          # Root layout
 │   ├── page.tsx            # Ana sayfa
@@ -239,7 +239,7 @@ schol-ar-scientific-reader/
 ### Ana Ekran
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  🏠 ScholAR              🌍 Türkçe  🔍 📖 🌓            │
+│  🏠 ArticleR              🌍 Türkçe  🔍 📖 🌓            │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  ┌─────────────────────────┐                            │
@@ -388,9 +388,9 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 👨‍💻 Geliştirici
 
-**ScholAR Ekibi**
+**ArticleR Ekibi**
 
-Sorularınız için: [GitHub Issues](https://github.com/yourusername/schol-ar-scientific-reader/issues)
+Sorularınız için: [GitHub Issues](https://github.com/yourusername/articler/issues)
 
 ---
 
@@ -408,6 +408,6 @@ Bu proje aşağıdaki açık kaynak projeleri kullanmaktadır:
 
 **Akademik başarınız için geliştirildi 📚✨**
 
-[⭐ Star](https://github.com/yourusername/schol-ar-scientific-reader) • [🐛 Report Bug](https://github.com/yourusername/schol-ar-scientific-reader/issues) • [✨ Request Feature](https://github.com/yourusername/schol-ar-scientific-reader/issues)
+[⭐ Star](https://github.com/yourusername/articler) • [🐛 Report Bug](https://github.com/yourusername/articler/issues) • [✨ Request Feature](https://github.com/yourusername/articler/issues)
 
 </div>

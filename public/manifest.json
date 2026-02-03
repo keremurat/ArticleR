@@ -1,6 +1,6 @@
 {
-  "name": "ScholAR - Bilimsel Makale Okuyucu",
-  "short_name": "ScholAR",
+  "name": "ArticleR - Bilimsel Makale Okuyucu",
+  "short_name": "ArticleR",
   "description": "Akademik PDF'leri okumak, çevirmek ve anlamak için gelişmiş web uygulaması",
   "start_url": "/",
   "display": "standalone",

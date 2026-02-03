@@ -18,18 +18,18 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'ScholAR - Bilimsel Makale Okuyucu',
+  title: 'ArticleR - Bilimsel Makale Okuyucu',
   description: 'Akademik PDF\'leri okumak, çevirmek ve anlamak için gelişmiş web uygulaması. Anında kelime çevirisi, akıllı arama, vurgulama ve kelime defteri özellikleri ile araştırmanızı hızlandırın.',
   keywords: ['PDF okuyucu', 'akademik makale', 'çeviri', 'bilimsel okuma', 'scholar', 'araştırma', 'PDF viewer', 'translation'],
-  authors: [{ name: 'ScholAR Team' }],
-  creator: 'ScholAR Team',
-  publisher: 'ScholAR',
-  applicationName: 'ScholAR',
+  authors: [{ name: 'ArticleR Team' }],
+  creator: 'ArticleR Team',
+  publisher: 'ArticleR',
+  applicationName: 'ArticleR',
   generator: 'Next.js',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    title: 'ScholAR',
+    title: 'ArticleR',
     statusBarStyle: 'default',
   },
   formatDetection: {
@@ -38,14 +38,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'tr_TR',
-    url: 'https://scholar.app',
-    title: 'ScholAR - Bilimsel Makale Okuyucu',
+    url: 'https://articler.app',
+    title: 'ArticleR - Bilimsel Makale Okuyucu',
     description: 'Akademik PDF\'leri okumak, çevirmek ve anlamak için gelişmiş web uygulaması',
-    siteName: 'ScholAR',
+    siteName: 'ArticleR',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ScholAR - Bilimsel Makale Okuyucu',
+    title: 'ArticleR - Bilimsel Makale Okuyucu',
     description: 'Akademik PDF\'leri okumak, çevirmek ve anlamak için gelişmiş web uygulaması',
   },
   icons: {
