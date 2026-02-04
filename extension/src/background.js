@@ -153,23 +153,23 @@ async function deleteWord(wordId) {
   }
 }
 
-// Keyboard shortcuts
-chrome.commands.onCommand.addListener((command) => {
-  if (command === 'toggle-extension') {
-    chrome.storage.sync.get(['settings'], (result) => {
-      const settings = result.settings || DEFAULT_SETTINGS;
-      settings.enabled = !settings.enabled;
-      chrome.storage.sync.set({ settings });
-
-      // Notification göster
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: 'icons/icon48.png',
-        title: 'ArticleR',
-        message: settings.enabled ? 'Eklenti aktif' : 'Eklenti pasif'
-      });
-    });
-  }
-});
+// Keyboard shortcuts - TODO: Manifest'e commands eklenecek
+// chrome.commands.onCommand.addListener((command) => {
+//   if (command === 'toggle-extension') {
+//     chrome.storage.sync.get(['settings'], (result) => {
+//       const settings = result.settings || DEFAULT_SETTINGS;
+//       settings.enabled = !settings.enabled;
+//       chrome.storage.sync.set({ settings });
+//
+//       // Notification göster
+//       chrome.notifications.create({
+//         type: 'basic',
+//         iconUrl: 'icons/icon48.png',
+//         title: 'ArticleR',
+//         message: settings.enabled ? 'Eklenti aktif' : 'Eklenti pasif'
+//       });
+//     });
+//   }
+// });
 
 console.log('ArticleR background service worker started');

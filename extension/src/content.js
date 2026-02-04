@@ -232,8 +232,12 @@ document.addEventListener('mousemove', (e) => {
   if (!settings.enabled) return;
 
   // Tooltip üzerindeyse işlem yapma
-  if (e.target && e.target.closest && e.target.closest('#articler-tooltip')) {
-    return;
+  try {
+    if (e.target && typeof e.target.closest === 'function' && e.target.closest('#articler-tooltip')) {
+      return;
+    }
+  } catch (err) {
+    // Closest desteklenmiyor veya hata, devam et
   }
 
   // Önceki timeout'u temizle
@@ -260,8 +264,15 @@ document.addEventListener('mousemove', (e) => {
 
 // Tooltip dışına tıklandığında kapat
 document.addEventListener('click', (e) => {
-  if (isTooltipVisible && e.target && e.target.closest && !e.target.closest('#articler-tooltip')) {
-    hideTooltip();
+  try {
+    if (isTooltipVisible && e.target && typeof e.target.closest === 'function' && !e.target.closest('#articler-tooltip')) {
+      hideTooltip();
+    }
+  } catch (err) {
+    // Hata durumunda tooltip'i kapat
+    if (isTooltipVisible) {
+      hideTooltip();
+    }
   }
 });
 
