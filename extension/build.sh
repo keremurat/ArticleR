@@ -22,6 +22,7 @@ cp src/popup.js dist/popup.js
 # Copy HTML and CSS files
 cp popup.html dist/popup.html
 cp popup.css dist/popup.css
+cp welcome.html dist/welcome.html
 
 # Copy icons (if they exist)
 if [ -d "public/icons" ]; then

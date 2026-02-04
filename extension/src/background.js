@@ -10,13 +10,22 @@ const DEFAULT_SETTINGS = {
 };
 
 // Extension yüklendiğinde
-chrome.runtime.onInstalled.addListener((details) => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
-    // İlk kurulumda varsayılan ayarları kaydet
-    chrome.storage.sync.set({ settings: DEFAULT_SETTINGS });
+    // İlk kurulumda - Hoş geldiniz sayfasını aç
+    chrome.tabs.create({ url: chrome.runtime.getURL('welcome.html') });
+  } else if (details.reason === 'update') {
+    // Güncelleme bildirimi (opsiyonel)
+    console.log('ArticleR güncellendi!');
+  }
 
-    // Hoş geldiniz sayfasını aç
-    chrome.tabs.create({ url: 'popup.html' });
+  // Ayarları kontrol et, yoksa varsayılanları yükle
+  const result = await chrome.storage.sync.get(['settings', 'onboardingCompleted']);
+  if (!result.settings) {
+    await chrome.storage.sync.set({
+      settings: DEFAULT_SETTINGS,
+      onboardingCompleted: false
+    });
   }
 });
 

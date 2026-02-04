@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArticleR'a Hoş Geldiniz!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .welcome-container {
+      max-width: 600px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome-header {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .welcome-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .welcome-icon svg {
+      width: 48px;
+      height: 48px;
+    }
+
+    .welcome-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .welcome-header p {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    .welcome-content {
+      padding: 40px 30px;
+    }
+
+    .feature-list {
+      margin-bottom: 30px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .feature-item:hover {
+      background: #f1f5f9;
+      transform: translateX(5px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+
+    .feature-text h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .feature-text p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .activation-section {
+      background: #fef3c7;
+      border: 2px solid #fbbf24;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .activation-section h2 {
+      font-size: 18px;
+      color: #92400e;
+      margin-bottom: 12px;
+    }
+
+    .activation-section p {
+      font-size: 14px;
+      color: #78350f;
+      margin-bottom: 20px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #64748b;
+      border: 2px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px 30px;
+      background: #f8fafc;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .footer a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .checkmark {
+      width: 20px;
+      height: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .welcome-header h1 {
+        font-size: 24px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-container">
+    <div class="welcome-header">
+      <div class="welcome-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+      </div>
+      <h1>ArticleR'a Hoş Geldiniz! 🎉</h1>
+      <p>Akıllı Çeviri Asistanınız</p>
+    </div>
+
+    <div class="welcome-content">
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Anında Çeviri</h3>
+            <p>Herhangi bir web sayfasında kelimenin üzerine gelin, otomatik çeviri görün</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Kelime Defteri</h3>
+            <p>Öğrendiğiniz kelimeleri kaydedin ve ilerlemenizi takip edin</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" x2="12" y1="19" y2="22"></line>
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Sesli Okuma</h3>
+            <p>Kelimelerin doğru telaffuzunu öğrenin</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="activation-section">
+        <h2>⚡ Eklentiyi Şimdi Aktifleştirmek İster misiniz?</h2>
+        <p>ArticleR'ı aktif ederek tüm web sitelerinde anında çeviri yapmaya başlayabilirsiniz. Daha sonra istediğiniz zaman ayarlardan değiştirebilirsiniz.</p>
+
+        <div class="button-group">
+          <button class="btn btn-primary" id="activateBtn">
+            <svg class="checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Evet, Aktif Et
+          </button>
+          <button class="btn btn-secondary" id="skipBtn">
+            Daha Sonra
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>
+        Yardıma mı ihtiyacınız var?
+        <a href="https://github.com/yourusername/articler" target="_blank">Kullanım Kılavuzu</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Aktif Et butonu
+    document.getElementById('activateBtn').addEventListener('click', async () => {
+      // Extension'ı aktif et
+      await chrome.storage.sync.set({
+        settings: {
+          enabled: true,
+          targetLanguage: 'tr',
+          hoverDelay: 500,
+          autoSpeak: false
+        },
+        onboardingCompleted: true
+      });
+
+      // Başarı mesajı göster
+      showSuccess();
+    });
+
+    // Daha Sonra butonu
+    document.getElementById('skipBtn').addEventListener('click', async () => {
+      // Eklenti pasif olarak başlasın
+      await chrome.storage.sync.set({
+        settings: {
+          enabled: false,
+          targetLanguage: 'tr',
+          hoverDelay: 500,
+          autoSpeak: false
+        },
+        onboardingCompleted: true
+      });
+
+      // Sayfayı kapat
+      window.close();
+    });
+
+    function showSuccess() {
+      const activationSection = document.querySelector('.activation-section');
+      activationSection.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+          <div style="width: 60px; height: 60px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h2 style="color: #059669; margin-bottom: 10px;">Harika! 🎊</h2>
+          <p style="color: #047857; margin-bottom: 20px;">ArticleR aktif edildi. Artık herhangi bir web sayfasında kullanabilirsiniz!</p>
+          <button class="btn btn-primary" onclick="window.close()">Başlayalım</button>
+        </div>
+      `;
+    }
+
+    // Klavye kısayolu
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('activateBtn').click();
+      }
+    });
+  </script>
+</body>
+</html>
