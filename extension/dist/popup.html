@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArticleR - Ayarlar</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          <line x1="9" y1="10" x2="15" y2="10"></line>
+          <line x1="12" y1="7" x2="12" y2="13"></line>
+        </svg>
+        <h1>ArticleR</h1>
+      </div>
+      <p class="subtitle">Akıllı Çeviri Asistanı</p>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-section">
+      <div class="setting-item">
+        <div class="setting-header">
+          <label class="setting-label">Eklentiyi Aktif Et</label>
+          <label class="switch">
+            <input type="checkbox" id="enabledToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="setting-description">Kelime üzerine gelince çeviri göster</p>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label" for="targetLanguage">Hedef Dil</label>
+        <select id="targetLanguage" class="select-input">
+          <option value="tr">Türkçe</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+          <option value="ru">Русский</option>
+          <option value="ar">العربية</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+        </select>
+      </div>
+
+      <div class="setting-item">
+        <label class="setting-label" for="hoverDelay">Hover Gecikmesi (ms)</label>
+        <div class="slider-container">
+          <input type="range" id="hoverDelay" min="100" max="2000" step="100" value="500">
+          <span id="hoverDelayValue" class="slider-value">500</span>
+        </div>
+        <p class="setting-description">Kelimenin üzerinde durma süresi</p>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-header">
+          <label class="setting-label">Otomatik Sesli Okuma</label>
+          <label class="switch">
+            <input type="checkbox" id="autoSpeakToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="setting-description">Çeviri göründüğünde otomatik oku</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="saved">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        Kaydedilenler
+      </button>
+      <button class="tab-btn" data-tab="stats">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        İstatistikler
+      </button>
+    </div>
+
+    <!-- Saved Words Tab -->
+    <div id="savedTab" class="tab-content active">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Kayıtlı kelimelerde ara...">
+      </div>
+
+      <div id="savedWordsList" class="saved-words-list">
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <p>Henüz kayıtlı kelime yok</p>
+          <span>Çevirdiğiniz kelimeleri kaydetmeye başlayın</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Tab -->
+    <div id="statsTab" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-value" id="totalWords">0</div>
+          <div class="stat-label">Toplam Kelime</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" id="todayWords">0</div>
+          <div class="stat-label">Bugün Eklenen</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="streakDays">0</div>
+          <div class="stat-label">Günlük Seri</div>
+        </div>
+      </div>
+
+      <div class="export-section">
+        <button id="exportBtn" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Kelimeleri Dışa Aktar
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Klavye kısayolu: <kbd>Alt+Shift+T</kbd></p>
+      <a href="https://github.com/yourusername/articler" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
