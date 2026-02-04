@@ -25,7 +25,7 @@ async function loadSettings() {
   document.getElementById('enabledToggle').checked = settings.enabled;
   document.getElementById('targetLanguage').value = settings.targetLanguage;
   document.getElementById('hoverDelay').value = settings.hoverDelay;
-  document.getElementById('hoverDelayValue').textContent = settings.hoverDelay;
+  document.getElementById('hoverDelayValue').textContent = settings.hoverDelay + 'ms';
   document.getElementById('autoSpeakToggle').checked = settings.autoSpeak;
 }
 
@@ -54,12 +54,12 @@ function renderSavedWords(filterText = '') {
   if (filteredWords.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
         </svg>
-        <p>${filterText ? 'Kelime bulunamadı' : 'Henüz kayıtlı kelime yok'}</p>
-        <span>${filterText ? 'Farklı bir arama deneyin' : 'Çevirdiğiniz kelimeleri kaydetmeye başlayın'}</span>
+        <p class="empty-title">${filterText ? 'Kelime bulunamadı' : 'Henüz kelime yok'}</p>
+        <span class="empty-desc">${filterText ? 'Farklı arama deneyin' : 'Çeviri yaptığınızda kaydedin'}</span>
       </div>
     `;
     return;
@@ -127,7 +127,7 @@ function initializeEventListeners() {
 
   document.getElementById('hoverDelay').addEventListener('input', (e) => {
     settings.hoverDelay = parseInt(e.target.value);
-    document.getElementById('hoverDelayValue').textContent = settings.hoverDelay;
+    document.getElementById('hoverDelayValue').textContent = settings.hoverDelay + 'ms';
   });
 
   document.getElementById('hoverDelay').addEventListener('change', () => {
@@ -144,8 +144,8 @@ function initializeEventListeners() {
     renderSavedWords(e.target.value);
   });
 
-  // Tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  // Navigation Tabs
+  document.querySelectorAll('.nav-tab').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const tabName = e.currentTarget.dataset.tab;
       switchTab(tabName);
@@ -158,9 +158,11 @@ function initializeEventListeners() {
 
 // Switch tabs
 function switchTab(tabName) {
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  // Remove active from all tabs
+  document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
+  // Add active to selected tab
   document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
   document.getElementById(`${tabName}Tab`).classList.add('active');
 
@@ -179,7 +181,7 @@ function updateStats() {
 
   // Calculate streak
   const streak = calculateStreak();
-  document.getElementById('streakDays').textContent = streak;
+  document.getElementById('streakValue').textContent = streak;
 }
 
 // Calculate learning streak
