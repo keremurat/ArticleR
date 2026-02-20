@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>ArticleR - Storage Debug</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #3b82f6;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .secondary {
+      background: #6b7280;
+    }
+    .secondary:hover {
+      background: #4b5563;
+    }
+    pre {
+      background: #1f2937;
+      color: #10b981;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+    }
+    .status {
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 ArticleR Storage Debug</h1>
+    <p>Bu sayfa extension'ınızın ayarlarını görüntüler ve test eder.</p>
+
+    <div>
+      <button onclick="loadStorage()">📥 Ayarları Yükle</button>
+      <button onclick="testActivation()" class="secondary">✅ Aktivasyonu Test Et</button>
+      <button onclick="clearStorage()" class="secondary">🗑️ Ayarları Temizle</button>
+    </div>
+
+    <div id="status"></div>
+
+    <h2>Storage İçeriği:</h2>
+    <pre id="output">Ayarları görmek için "Ayarları Yükle" butonuna tıklayın...</pre>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+    const statusDiv = document.getElementById('status');
+
+    function showStatus(message, isSuccess = true) {
+      statusDiv.innerHTML = `<div class="status ${isSuccess ? 'success' : 'error'}">${message}</div>`;
+      setTimeout(() => {
+        statusDiv.innerHTML = '';
+      }, 3000);
+    }
+
+    async function loadStorage() {
+      try {
+        const syncData = await chrome.storage.sync.get(null);
+        const localData = await chrome.storage.local.get(null);
+
+        const result = {
+          'chrome.storage.sync': syncData,
+          'chrome.storage.local': localData
+        };
+
+        output.textContent = JSON.stringify(result, null, 2);
+        showStatus('✅ Ayarlar başarıyla yüklendi!', true);
+      } catch (error) {
+        output.textContent = 'HATA: ' + error.message;
+        showStatus('❌ Hata: ' + error.message, false);
+      }
+    }
+
+    async function testActivation() {
+      try {
+        await chrome.storage.sync.set({
+          settings: {
+            enabled: true,
+            targetLanguage: 'tr',
+            hoverDelay: 500,
+            autoSpeak: false
+          },
+          onboardingCompleted: true
+        });
+
+        showStatus('✅ Test aktivasyonu başarılı!', true);
+        await loadStorage();
+      } catch (error) {
+        showStatus('❌ Test aktivasyonu başarısız: ' + error.message, false);
+      }
+    }
+
+    async function clearStorage() {
+      if (!confirm('Tüm ayarları silmek istediğinize emin misiniz?')) {
+        return;
+      }
+
+      try {
+        await chrome.storage.sync.clear();
+        await chrome.storage.local.clear();
+        showStatus('✅ Tüm ayarlar temizlendi!', true);
+        output.textContent = '(Boş)';
+      } catch (error) {
+        showStatus('❌ Hata: ' + error.message, false);
+      }
+    }
+
+    // Sayfa yüklendiğinde otomatik yükle
+    window.addEventListener('load', () => {
+      loadStorage();
+    });
+  </script>
+</body>
+</html>
