@@ -37,7 +37,7 @@ export function PDFUpload() {
       const url = URL.createObjectURL(file)
       setPdfFile(file)
       setPdfUrl(url)
-      addRecentPdf(file.name, url)
+      addRecentPdf(file.name)
     },
     [setPdfFile, setPdfUrl, addRecentPdf]
   )
@@ -180,19 +180,16 @@ export function PDFUpload() {
             </div>
             <div className="space-y-2">
               {recentPdfs.map((pdf, index) => (
-                <motion.button
+                <motion.div
                   key={pdf.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
-                  onClick={() => {
-                    setPdfUrl(pdf.url)
-                  }}
-                  className="flex w-full items-center gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:bg-muted"
+                  className="flex w-full items-center gap-3 rounded-lg border bg-card p-3 text-left"
                 >
                   <FileText className="size-5 text-secondary" />
                   <span className="flex-1 truncate text-sm text-foreground">{pdf.name}</span>
-                </motion.button>
+                </motion.div>
               ))}
             </div>
           </motion.div>
