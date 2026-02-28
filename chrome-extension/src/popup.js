@@ -49,7 +49,8 @@ async function loadSettings() {
     enabled: true,
     targetLanguage: 'tr',
     hoverDelay: 500,
-    autoSpeak: false
+    autoSpeak: false,
+    debugMode: false
   };
 
   // Update UI
@@ -58,6 +59,7 @@ async function loadSettings() {
   document.getElementById('hoverDelay').value = settings.hoverDelay;
   document.getElementById('hoverDelayValue').textContent = settings.hoverDelay + 'ms';
   document.getElementById('autoSpeakToggle').checked = settings.autoSpeak;
+  document.getElementById('debugModeToggle').checked = Boolean(settings.debugMode);
 }
 
 // Save settings to storage
@@ -83,45 +85,112 @@ function renderSavedWords(filterText = '') {
   );
 
   if (filteredWords.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-        </svg>
-        <p class="empty-title">${filterText ? 'Kelime bulunamadı' : 'Henüz kelime yok'}</p>
-        <span class="empty-desc">${filterText ? 'Farklı arama deneyin' : 'Çeviri yaptığınızda kaydedin'}</span>
-      </div>
-    `;
+    const emptyState = document.createElement('div');
+    emptyState.className = 'empty-state';
+
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('width', '48');
+    icon.setAttribute('height', '48');
+    icon.setAttribute('viewBox', '0 0 24 24');
+    icon.setAttribute('fill', 'none');
+    icon.setAttribute('stroke', 'currentColor');
+    icon.setAttribute('stroke-width', '1.5');
+    icon.setAttribute('opacity', '0.3');
+
+    const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path1.setAttribute('d', 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20');
+    const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path2.setAttribute('d', 'M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z');
+    icon.append(path1, path2);
+
+    const title = document.createElement('p');
+    title.className = 'empty-title';
+    title.textContent = filterText ? 'Kelime bulunamadı' : 'Henüz kelime yok';
+
+    const desc = document.createElement('span');
+    desc.className = 'empty-desc';
+    desc.textContent = filterText ? 'Farklı arama deneyin' : 'Çeviri yaptığınızda kaydedin';
+
+    emptyState.append(icon, title, desc);
+    container.replaceChildren(emptyState);
     return;
   }
 
-  container.innerHTML = filteredWords.map(word => `
-    <div class="word-card" data-id="${word.id}">
-      <div class="word-content">
-        <div class="word-original">${word.original}</div>
-        <div class="word-translation">${word.translation}</div>
-        <div class="word-meta">
-          <span class="word-date">${formatDate(word.timestamp)}</span>
-          ${word.url ? `<a href="${word.url}" class="word-url" target="_blank">Kaynağı Görüntüle</a>` : ''}
-        </div>
-      </div>
-      <div class="word-actions">
-        <button class="icon-btn speak-btn" data-word="${word.original}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </button>
-        <button class="icon-btn delete-btn" data-id="${word.id}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-  `).join('');
+  const listFragment = document.createDocumentFragment();
+
+  filteredWords.forEach((word) => {
+    const wordCard = document.createElement('div');
+    wordCard.className = 'word-card';
+    wordCard.dataset.id = String(word.id || '');
+
+    const wordContent = document.createElement('div');
+    wordContent.className = 'word-content';
+
+    const original = document.createElement('div');
+    original.className = 'word-original';
+    original.textContent = String(word.original || '');
+
+    const translation = document.createElement('div');
+    translation.className = 'word-translation';
+    translation.textContent = String(word.translation || '');
+
+    const meta = document.createElement('div');
+    meta.className = 'word-meta';
+
+    const date = document.createElement('span');
+    date.className = 'word-date';
+    date.textContent = formatDate(word.timestamp);
+
+    meta.appendChild(date);
+
+    if (word.url) {
+      try {
+        const parsedUrl = new URL(word.url);
+        if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+          const sourceLink = document.createElement('a');
+          sourceLink.href = parsedUrl.toString();
+          sourceLink.className = 'word-url';
+          sourceLink.target = '_blank';
+          sourceLink.rel = 'noopener noreferrer';
+          sourceLink.textContent = 'Kaynağı Görüntüle';
+          meta.appendChild(sourceLink);
+        }
+      } catch (_) {}
+    }
+
+    wordContent.append(original, translation, meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'word-actions';
+
+    const speakBtn = document.createElement('button');
+    speakBtn.className = 'icon-btn speak-btn';
+    speakBtn.dataset.word = String(word.original || '');
+    speakBtn.type = 'button';
+    speakBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+    `;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'icon-btn delete-btn';
+    deleteBtn.dataset.id = String(word.id || '');
+    deleteBtn.type = 'button';
+    deleteBtn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+      </svg>
+    `;
+
+    actions.append(speakBtn, deleteBtn);
+    wordCard.append(wordContent, actions);
+    listFragment.appendChild(wordCard);
+  });
+
+  container.replaceChildren(listFragment);
 
   // Add event listeners to buttons
   container.querySelectorAll('.speak-btn').forEach(btn => {
@@ -170,6 +239,11 @@ function initializeEventListeners() {
 
   document.getElementById('autoSpeakToggle').addEventListener('change', (e) => {
     settings.autoSpeak = e.target.checked;
+    saveSettings();
+  });
+
+  document.getElementById('debugModeToggle').addEventListener('change', (e) => {
+    settings.debugMode = e.target.checked;
     saveSettings();
   });
 

@@ -8,7 +8,8 @@ let settings = {
   enabled: true,
   targetLanguage: 'tr',
   hoverDelay: 500, // ms
-  autoSpeak: false
+  autoSpeak: false,
+  debugMode: false
 };
 
 // Ayarları yükle
@@ -50,7 +51,7 @@ function getWordAtPoint(x, y) {
   const word = text.slice(start, end).trim();
 
   // En az 2 karakter ve sadece harf içeren kelimeler
-  if (word.length < 2 || !/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/.test(word)) {
+  if (word.length < 2 || !/^[\p{L}\p{M}'-]+$/u.test(word)) {
     return null;
   }
 
@@ -83,6 +84,10 @@ function createTooltip() {
         <div class="articler-translation-text">
           <div class="articler-loader">Çevriliyor...</div>
         </div>
+        <div class="articler-debug-row" style="display:none">
+          <div class="articler-debug-text"></div>
+          <button class="articler-debug-copy" id="articler-debug-copy" type="button">Kopyala</button>
+        </div>
       </div>
       <div class="articler-actions">
         <button class="articler-btn articler-speak-btn" id="articler-speak">
@@ -108,8 +113,51 @@ function createTooltip() {
   tooltip.querySelector('#articler-close').addEventListener('click', hideTooltip);
   tooltip.querySelector('#articler-speak').addEventListener('click', speakWord);
   tooltip.querySelector('#articler-save').addEventListener('click', saveWord);
+  tooltip.querySelector('#articler-debug-copy').addEventListener('click', copyDebugInfo);
 
   return tooltip;
+}
+
+async function copyDebugInfo() {
+  if (!tooltipElement) return;
+
+  const debugElement = tooltipElement.querySelector('.articler-debug-text');
+  const copyButton = tooltipElement.querySelector('#articler-debug-copy');
+  const debugText = debugElement?.textContent?.trim();
+
+  if (!debugText || !copyButton) return;
+
+  let copied = false;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(debugText);
+      copied = true;
+    }
+  } catch (_) {}
+
+  if (!copied) {
+    const tempArea = document.createElement('textarea');
+    tempArea.value = debugText;
+    tempArea.setAttribute('readonly', '');
+    tempArea.style.position = 'fixed';
+    tempArea.style.opacity = '0';
+    document.body.appendChild(tempArea);
+    tempArea.select();
+    try {
+      copied = document.execCommand('copy');
+    } catch (_) {
+      copied = false;
+    }
+    document.body.removeChild(tempArea);
+  }
+
+  const oldText = copyButton.textContent;
+  copyButton.textContent = copied ? 'Kopyalandı' : 'Başarısız';
+  setTimeout(() => {
+    if (copyButton) {
+      copyButton.textContent = oldText || 'Kopyala';
+    }
+  }, 1200);
 }
 
 // Tooltip'i göster
@@ -124,6 +172,16 @@ function showTooltip(wordData) {
   // Tooltip içeriğini güncelle
   tooltipElement.querySelector('.articler-original-text').textContent = wordData.word;
   tooltipElement.querySelector('.articler-translation-text').innerHTML = '<div class="articler-loader">Çevriliyor...</div>';
+  const debugRow = tooltipElement.querySelector('.articler-debug-row');
+  const debugElement = tooltipElement.querySelector('.articler-debug-text');
+  const debugCopyButton = tooltipElement.querySelector('#articler-debug-copy');
+  if (debugRow && debugElement) {
+    debugRow.style.display = 'none';
+    debugElement.textContent = '';
+  }
+  if (debugCopyButton) {
+    debugCopyButton.textContent = 'Kopyala';
+  }
 
   // Pozisyonu hesapla
   const rect = wordData.rect;
@@ -173,6 +231,16 @@ async function translateWord(word) {
 
     if (response.success && tooltipElement && isTooltipVisible) {
       tooltipElement.querySelector('.articler-translation-text').textContent = response.translation;
+
+      const debugRow = tooltipElement.querySelector('.articler-debug-row');
+      const debugElement = tooltipElement.querySelector('.articler-debug-text');
+      if (debugRow && debugElement && settings.debugMode && response.debug) {
+        const pairText = response.debug.langPair ? ` • ${response.debug.langPair}` : '';
+        const fallbackText = response.debug.usedFallback ? ' • fallback' : '';
+        const skippedText = response.debug.skipped ? ' • skip' : '';
+        debugElement.textContent = `Dil: ${response.debug.sourceLang} → ${response.debug.targetLang}${pairText}${fallbackText}${skippedText}`;
+        debugRow.style.display = 'flex';
+      }
 
       if (settings.autoSpeak) {
         speakWord();

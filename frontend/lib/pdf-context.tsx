@@ -44,8 +44,8 @@ interface PDFContextType {
   setSearchQuery: (query: string) => void
   isDarkMode: boolean
   toggleDarkMode: () => void
-  recentPdfs: { name: string; url: string; lastOpened: Date }[]
-  addRecentPdf: (name: string, url: string) => void
+  recentPdfs: { name: string; lastOpened: Date }[]
+  addRecentPdf: (name: string) => void
   highlights: Highlight[]
   addHighlight: (highlight: Omit<Highlight, "id" | "createdAt">) => void
   removeHighlight: (id: string) => void
@@ -75,7 +75,7 @@ export function PDFProvider({ children }: { children: ReactNode }) {
     }
     return false
   })
-  const [recentPdfs, setRecentPdfs] = useState<{ name: string; url: string; lastOpened: Date }[]>(() => {
+  const [recentPdfs, setRecentPdfs] = useState<{ name: string; lastOpened: Date }[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("scholar-recent-pdfs")
       return saved ? JSON.parse(saved) : []
@@ -124,10 +124,10 @@ export function PDFProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const addRecentPdf = useCallback((name: string, url: string) => {
+  const addRecentPdf = useCallback((name: string) => {
     setRecentPdfs((prev) => {
       const filtered = prev.filter((p) => p.name !== name)
-      const updated = [{ name, url, lastOpened: new Date() }, ...filtered].slice(0, 5)
+      const updated = [{ name, lastOpened: new Date() }, ...filtered].slice(0, 5)
       localStorage.setItem("scholar-recent-pdfs", JSON.stringify(updated))
       return updated
     })

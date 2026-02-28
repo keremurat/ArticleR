@@ -233,7 +233,7 @@ export function PDFViewer() {
       // Ctrl+Z for zoom
       if (e.ctrlKey && e.key === "z") {
         e.preventDefault()
-        setScale((s) => Math.min(s + 0.25, 3))
+        setScale(Math.min(scale + 0.25, 3))
       }
       // Escape to close tooltip
       if (e.key === "Escape") {
@@ -256,7 +256,7 @@ export function PDFViewer() {
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [closeTooltip, currentPage, numPages, setCurrentPage, setScale])
+  }, [closeTooltip, currentPage, numPages, scale, setCurrentPage, setScale])
 
   // Apply dark mode class
   useEffect(() => {

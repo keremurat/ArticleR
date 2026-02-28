@@ -6,8 +6,36 @@ const DEFAULT_SETTINGS = {
   targetLanguage: 'tr',
   hoverDelay: 500,
   autoSpeak: false,
+  debugMode: false,
   translationService: 'mymemory' // free API
 };
+
+const SUPPORTED_LANGUAGES = new Set([
+  'tr', 'en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'zh', 'ja', 'ko'
+]);
+
+function normalizeLanguageCode(lang) {
+  const code = String(lang || 'tr').toLowerCase().split('-')[0];
+  return SUPPORTED_LANGUAGES.has(code) ? code : 'tr';
+}
+
+function detectSourceLanguage(text) {
+  if (!text) return 'en';
+
+  if (/[ğüşöçıİĞÜŞÖÇ]/.test(text)) return 'tr';
+  if (/[äöüßÄÖÜ]/.test(text)) return 'de';
+  if (/[àâçéèêëîïôûùüÿœæ]/i.test(text)) return 'fr';
+  if (/[áéíóúñ¿¡]/i.test(text)) return 'es';
+  if (/[àèéìíîòóù]/i.test(text)) return 'it';
+  if (/[ãõâêôç]/i.test(text)) return 'pt';
+  if (/[\u0400-\u04FF]/.test(text)) return 'ru';
+  if (/[\u0600-\u06FF]/.test(text)) return 'ar';
+  if (/[\u3040-\u30FF]/.test(text)) return 'ja';
+  if (/[\uAC00-\uD7AF]/.test(text)) return 'ko';
+  if (/[\u4E00-\u9FFF]/.test(text)) return 'zh';
+
+  return 'en';
+}
 
 // Extension yüklendiğinde
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -33,7 +61,11 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'TRANSLATE') {
     handleTranslation(request.text, request.targetLang)
-      .then(translation => sendResponse({ success: true, translation }))
+      .then(result => sendResponse({
+        success: true,
+        translation: result.translation,
+        debug: result.debug
+      }))
       .catch(error => sendResponse({ success: false, error: error.message }));
     return true; // Async response için gerekli
   }
@@ -68,15 +100,55 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Çeviri fonksiyonu - MyMemory Free API kullanımı
 async function handleTranslation(text, targetLang = 'tr') {
+  const safeText = String(text || '').trim();
+  if (!safeText) {
+    return {
+      translation: '',
+      debug: {
+        sourceLang: 'en',
+        targetLang: normalizeLanguageCode(targetLang),
+        langPair: null,
+        usedFallback: false,
+        skipped: true
+      }
+    };
+  }
+
+  const normalizedTargetLang = normalizeLanguageCode(targetLang);
+  const sourceLang = detectSourceLanguage(safeText);
+  const langPair = `${sourceLang}|${normalizedTargetLang}`;
+
+  if (sourceLang === normalizedTargetLang) {
+    return {
+      translation: safeText,
+      debug: {
+        sourceLang,
+        targetLang: normalizedTargetLang,
+        langPair,
+        usedFallback: false,
+        skipped: true
+      }
+    };
+  }
+
   try {
     // MyMemory Translation API (günlük 10000 karakter limiti, ücretsiz)
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`;
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(safeText)}&langpair=${langPair}`;
 
     const response = await fetch(url);
     const data = await response.json();
 
-    if (data.responseStatus === 200 && data.responseData) {
-      return data.responseData.translatedText;
+    if (data.responseStatus === 200 && data.responseData?.translatedText) {
+      return {
+        translation: data.responseData.translatedText,
+        debug: {
+          sourceLang,
+          targetLang: normalizedTargetLang,
+          langPair,
+          usedFallback: false,
+          skipped: false
+        }
+      };
     }
 
     // Alternatif olarak LibreTranslate API deneyebilir (kendi sunucunuz olması gerekir)
@@ -87,18 +159,38 @@ async function handleTranslation(text, targetLang = 'tr') {
 
     // Fallback: Basit bir sözlük API'si
     try {
-      const dictUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(text)}`;
-      const dictResponse = await fetch(dictUrl);
-      const dictData = await dictResponse.json();
+      if (sourceLang === 'en') {
+        const dictUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(safeText)}`;
+        const dictResponse = await fetch(dictUrl);
+        const dictData = await dictResponse.json();
 
-      if (dictData[0]?.meanings[0]?.definitions[0]?.definition) {
-        return dictData[0].meanings[0].definitions[0].definition;
+        if (dictData[0]?.meanings[0]?.definitions[0]?.definition) {
+          return {
+            translation: dictData[0].meanings[0].definitions[0].definition,
+            debug: {
+              sourceLang,
+              targetLang: normalizedTargetLang,
+              langPair,
+              usedFallback: true,
+              skipped: false
+            }
+          };
+        }
       }
     } catch (dictError) {
       console.error('Dictionary API error:', dictError);
     }
 
-    throw error;
+    return {
+      translation: safeText,
+      debug: {
+        sourceLang,
+        targetLang: normalizedTargetLang,
+        langPair,
+        usedFallback: true,
+        skipped: false
+      }
+    };
   }
 }
 
