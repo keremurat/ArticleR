@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { useState, useCallback, useEffect, useRef, useMemo } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { Document, Page, pdfjs } from "react-pdf"
 import { motion } from "framer-motion"
 import {
@@ -72,7 +72,6 @@ export function PDFViewer() {
     removeHighlight,
   } = usePDF()
 
-  const [isLoading, setIsLoading] = useState(true)
   const [selectedText, setSelectedText] = useState<string | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [isNotebookOpen, setIsNotebookOpen] = useState(false)
@@ -89,7 +88,6 @@ export function PDFViewer() {
   const onDocumentLoadSuccess = useCallback(
     ({ numPages }: { numPages: number }) => {
       setNumPages(numPages)
-      setIsLoading(false)
     },
     [setNumPages]
   )

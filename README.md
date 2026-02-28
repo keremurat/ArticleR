@@ -135,6 +135,7 @@ ArticleR/
 │
 ├── docs/                       # Documentation
 │   ├── KULLANIM_KILAVUZU.md   # Turkish user guide
+│   ├── SMOKE_TEST_CHECKLIST.md # Release smoke test checklist
 │   └── CHANGELOG.md           # Version history
 │
 ├── README.md                   # This file
@@ -172,7 +173,12 @@ ArticleR/
 - **[Frontend Documentation](./frontend/README.md)** - Web app setup and features
 - **[Extension Documentation](./chrome-extension/README.md)** - Extension installation and usage
 - **[User Guide (Turkish)](./docs/KULLANIM_KILAVUZU.md)** - Detailed usage instructions
+- **[Smoke Test Checklist](./docs/SMOKE_TEST_CHECKLIST.md)** - Pre-release validation steps
 - **[Changelog](./docs/CHANGELOG.md)** - Version history
+- **[Quality Gate Workflow](./.github/workflows/quality-gate.yml)** - CI lint/build checks
+- **[Security Audit Workflow](./.github/workflows/security-audit.yml)** - Weekly high-severity audit + JSON artifact report
+- **[Dependabot Config](./.github/dependabot.yml)** - Automated dependency update PRs
+- **[Web Vitals Reporter](./frontend/components/web-vitals-reporter.tsx)** - Runtime vitals telemetry + threshold exceed events + 24h aggregated alert signal
 
 ---
 

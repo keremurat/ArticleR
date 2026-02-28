@@ -3,15 +3,45 @@
 let savedWords = [];
 let settings = {};
 let currentTheme = 'light';
+let currentSearchQuery = '';
+let currentWordsPage = 1;
+let searchDebounceTimeout = null;
+let wordsPageSize = 20;
+
+const DEFAULT_WORDS_PAGE_SIZE = 20;
+const SUPPORTED_PAGE_SIZES = new Set([20, 50, 100]);
+const WORDS_PAGE_SIZE_STORAGE_KEY = 'popupWordsPageSize';
+const SEARCH_DEBOUNCE_MS = 200;
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   await loadTheme();
   await loadSettings();
+  await loadPopupPreferences();
   await loadSavedWords();
   initializeEventListeners();
   updateStats();
 });
+
+async function loadPopupPreferences() {
+  const result = await chrome.storage.local.get([WORDS_PAGE_SIZE_STORAGE_KEY]);
+  const parsedSize = Number(result[WORDS_PAGE_SIZE_STORAGE_KEY]);
+
+  if (SUPPORTED_PAGE_SIZES.has(parsedSize)) {
+    wordsPageSize = parsedSize;
+  } else {
+    wordsPageSize = DEFAULT_WORDS_PAGE_SIZE;
+  }
+
+  const pageSizeSelect = document.getElementById('pageSizeSelect');
+  if (pageSizeSelect) {
+    pageSizeSelect.value = String(wordsPageSize);
+  }
+}
+
+async function savePopupPreferences() {
+  await chrome.storage.local.set({ [WORDS_PAGE_SIZE_STORAGE_KEY]: wordsPageSize });
+}
 
 // Load and apply theme
 async function loadTheme() {
@@ -49,8 +79,7 @@ async function loadSettings() {
     enabled: true,
     targetLanguage: 'tr',
     hoverDelay: 500,
-    autoSpeak: false,
-    debugMode: false
+    autoSpeak: false
   };
 
   // Update UI
@@ -59,7 +88,6 @@ async function loadSettings() {
   document.getElementById('hoverDelay').value = settings.hoverDelay;
   document.getElementById('hoverDelayValue').textContent = settings.hoverDelay + 'ms';
   document.getElementById('autoSpeakToggle').checked = settings.autoSpeak;
-  document.getElementById('debugModeToggle').checked = Boolean(settings.debugMode);
 }
 
 // Save settings to storage
@@ -72,17 +100,48 @@ async function loadSavedWords() {
   const response = await chrome.runtime.sendMessage({ type: 'GET_SAVED_WORDS' });
   if (response.success) {
     savedWords = response.words;
-    renderSavedWords();
+    renderSavedWords(currentSearchQuery);
   }
 }
 
 // Render saved words list
-function renderSavedWords(filterText = '') {
-  const container = document.getElementById('savedWordsList');
-  const filteredWords = savedWords.filter(word =>
-    word.original.toLowerCase().includes(filterText.toLowerCase()) ||
-    word.translation.toLowerCase().includes(filterText.toLowerCase())
+function getFilteredWords(filterText) {
+  const normalizedFilter = String(filterText || '').toLowerCase();
+
+  return savedWords.filter(word =>
+    String(word.original || '').toLowerCase().includes(normalizedFilter) ||
+    String(word.translation || '').toLowerCase().includes(normalizedFilter)
   );
+}
+
+function updatePaginationControls(totalItems, totalPages) {
+  const paginationContainer = document.getElementById('wordsPagination');
+  const prevButton = document.getElementById('prevPageBtn');
+  const nextButton = document.getElementById('nextPageBtn');
+  const info = document.getElementById('paginationInfo');
+
+  if (totalItems <= wordsPageSize) {
+    paginationContainer.hidden = true;
+    return;
+  }
+
+  paginationContainer.hidden = false;
+  info.textContent = `${currentWordsPage} / ${totalPages}`;
+  prevButton.disabled = currentWordsPage <= 1;
+  nextButton.disabled = currentWordsPage >= totalPages;
+}
+
+function renderSavedWords(filterText = currentSearchQuery) {
+  const container = document.getElementById('savedWordsList');
+  currentSearchQuery = String(filterText || '');
+
+  const filteredWords = getFilteredWords(currentSearchQuery);
+  const totalPages = Math.max(1, Math.ceil(filteredWords.length / wordsPageSize));
+  currentWordsPage = Math.min(currentWordsPage, totalPages);
+  currentWordsPage = Math.max(1, currentWordsPage);
+
+  const startIndex = (currentWordsPage - 1) * wordsPageSize;
+  const pagedWords = filteredWords.slice(startIndex, startIndex + wordsPageSize);
 
   if (filteredWords.length === 0) {
     const emptyState = document.createElement('div');
@@ -113,12 +172,13 @@ function renderSavedWords(filterText = '') {
 
     emptyState.append(icon, title, desc);
     container.replaceChildren(emptyState);
+    updatePaginationControls(0, 1);
     return;
   }
 
   const listFragment = document.createDocumentFragment();
 
-  filteredWords.forEach((word) => {
+  pagedWords.forEach((word) => {
     const wordCard = document.createElement('div');
     wordCard.className = 'word-card';
     wordCard.dataset.id = String(word.id || '');
@@ -210,6 +270,8 @@ function renderSavedWords(filterText = '') {
       }
     });
   });
+
+  updatePaginationControls(filteredWords.length, totalPages);
 }
 
 // Initialize event listeners
@@ -242,14 +304,44 @@ function initializeEventListeners() {
     saveSettings();
   });
 
-  document.getElementById('debugModeToggle').addEventListener('change', (e) => {
-    settings.debugMode = e.target.checked;
-    saveSettings();
-  });
-
   // Search
   document.getElementById('searchInput').addEventListener('input', (e) => {
-    renderSavedWords(e.target.value);
+    const query = e.target.value;
+    if (searchDebounceTimeout) {
+      clearTimeout(searchDebounceTimeout);
+    }
+
+    searchDebounceTimeout = setTimeout(() => {
+      currentWordsPage = 1;
+      renderSavedWords(query);
+    }, SEARCH_DEBOUNCE_MS);
+  });
+
+  document.getElementById('prevPageBtn').addEventListener('click', () => {
+    if (currentWordsPage > 1) {
+      currentWordsPage -= 1;
+      renderSavedWords(currentSearchQuery);
+    }
+  });
+
+  document.getElementById('nextPageBtn').addEventListener('click', () => {
+    const totalPages = Math.max(1, Math.ceil(getFilteredWords(currentSearchQuery).length / wordsPageSize));
+    if (currentWordsPage < totalPages) {
+      currentWordsPage += 1;
+      renderSavedWords(currentSearchQuery);
+    }
+  });
+
+  document.getElementById('pageSizeSelect').addEventListener('change', async (e) => {
+    const selected = Number(e.target.value);
+    if (!SUPPORTED_PAGE_SIZES.has(selected)) {
+      return;
+    }
+
+    wordsPageSize = selected;
+    await savePopupPreferences();
+    currentWordsPage = 1;
+    renderSavedWords(currentSearchQuery);
   });
 
   // Navigation Tabs

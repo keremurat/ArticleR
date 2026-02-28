@@ -6,6 +6,19 @@ Format [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standardını ta
 
 ---
 
+## [Unreleased]
+
+### 🔧 İyileştirmeler
+- PDF blob URL yaşam döngüsü iyileştirildi, dosya değişiminde eski object URL'ler revoke edilerek bellek birikimi azaltıldı
+- `recentPdfs` localStorage yüklemesi daha güvenli hale getirildi (hatalı/bozuk veri için fallback eklendi)
+- Chrome Extension çeviri akışına cache (TTL), timeout/retry ve circuit-breaker eklenerek daha kararlı hale getirildi
+- Extension hover yakalama davranışı editable/code alanlarını yok sayacak şekilde iyileştirildi
+
+### 📈 Observability
+- Frontend'e Web Vitals izleme eklendi (`FCP`, `LCP`, `CLS`, `INP`, `TTFB` dahil)
+- Vitals metrikleri Vercel Analytics `track` ile olay olarak raporlanır hale getirildi
+- 24 saat içinde eşik ihlali birikimini izleyen ve eşik aşıldığında `web_vital_window_alert` olayı üreten soft alarm mekanizması eklendi
+
 ## [0.2.0] - 2024-02-03
 
 ### ✨ Eklenen Özellikler

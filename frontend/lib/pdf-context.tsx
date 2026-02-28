@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react"
+import { createContext, useContext, useState, useCallback, useRef, useEffect, type ReactNode } from "react"
 
 export interface SavedWord {
   id: string
@@ -55,7 +55,8 @@ const PDFContext = createContext<PDFContextType | null>(null)
 
 export function PDFProvider({ children }: { children: ReactNode }) {
   const [pdfFile, setPdfFile] = useState<File | null>(null)
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const [pdfUrl, setPdfUrlState] = useState<string | null>(null)
+  const previousBlobUrlRef = useRef<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [numPages, setNumPages] = useState(0)
   const [scale, setScale] = useState(1.0)
@@ -78,7 +79,21 @@ export function PDFProvider({ children }: { children: ReactNode }) {
   const [recentPdfs, setRecentPdfs] = useState<{ name: string; lastOpened: Date }[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("scholar-recent-pdfs")
-      return saved ? JSON.parse(saved) : []
+      if (!saved) {
+        return []
+      }
+
+      try {
+        const parsed = JSON.parse(saved) as { name: string; lastOpened: string }[]
+        return parsed
+          .map((pdf) => ({
+            name: pdf.name,
+            lastOpened: new Date(pdf.lastOpened),
+          }))
+          .filter((pdf) => !Number.isNaN(pdf.lastOpened.getTime()))
+      } catch {
+        return []
+      }
     }
     return []
   })
@@ -152,6 +167,30 @@ export function PDFProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("scholar-highlights", JSON.stringify(updated))
       return updated
     })
+  }, [])
+
+  const setPdfUrl = useCallback((url: string | null) => {
+    const previousBlobUrl = previousBlobUrlRef.current
+
+    if (previousBlobUrl && previousBlobUrl !== url) {
+      URL.revokeObjectURL(previousBlobUrl)
+    }
+
+    if (url?.startsWith("blob:")) {
+      previousBlobUrlRef.current = url
+    } else {
+      previousBlobUrlRef.current = null
+    }
+
+    setPdfUrlState(url)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (previousBlobUrlRef.current) {
+        URL.revokeObjectURL(previousBlobUrlRef.current)
+      }
+    }
   }, [])
 
   return (

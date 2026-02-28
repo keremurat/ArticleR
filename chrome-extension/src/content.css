@@ -116,56 +116,9 @@
   min-height: 20px;
 }
 
-.articler-debug-text {
-  font-size: 11px;
-  color: #94a3b8;
-  letter-spacing: 0.2px;
-  flex: 1;
-  line-height: 1.4;
-}
-
-.articler-debug-row {
-  margin-top: 8px;
-  display: none;
-  align-items: center;
-  gap: 8px;
-}
-
-.articler-debug-copy {
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #475569;
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.articler-debug-copy:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-}
-
 @media (prefers-color-scheme: dark) {
   .articler-translation-text {
     color: #cbd5e1;
-  }
-
-  .articler-debug-text {
-    color: #64748b;
-  }
-
-  .articler-debug-copy {
-    background: #334155;
-    border-color: #475569;
-    color: #cbd5e1;
-  }
-
-  .articler-debug-copy:hover {
-    background: #475569;
-    border-color: #64748b;
   }
 }
 

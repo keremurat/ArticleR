@@ -128,17 +128,6 @@
             </label>
           </div>
 
-          <div class="setting-row">
-            <div class="setting-info">
-              <label class="setting-title">Debug Modu</label>
-              <span class="setting-desc">Tooltip'te algılanan dili göster</span>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" id="debugModeToggle">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
         </div>
       </div>
 
@@ -152,6 +141,15 @@
           <input type="text" id="searchInput" placeholder="Ara..." class="search-input">
         </div>
 
+        <div class="words-toolbar">
+          <label for="pageSizeSelect" class="toolbar-label">Sayfa başına</label>
+          <select id="pageSizeSelect" class="page-size-select">
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+
         <div id="savedWordsList" class="words-list">
           <div class="empty-state">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
@@ -161,6 +159,12 @@
             <p class="empty-title">Henüz kelime yok</p>
             <span class="empty-desc">Çeviri yaptığınızda kaydedin</span>
           </div>
+        </div>
+
+        <div id="wordsPagination" class="words-pagination" hidden>
+          <button id="prevPageBtn" class="pagination-btn" type="button">Önceki</button>
+          <span id="paginationInfo" class="pagination-info">1 / 1</span>
+          <button id="nextPageBtn" class="pagination-btn" type="button">Sonraki</button>
         </div>
       </div>
 

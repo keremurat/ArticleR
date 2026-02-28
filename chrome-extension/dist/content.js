@@ -50,7 +50,7 @@ function getWordAtPoint(x, y) {
   const word = text.slice(start, end).trim();
 
   // En az 2 karakter ve sadece harf içeren kelimeler
-  if (word.length < 2 || !/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/.test(word)) {
+  if (word.length < 2 || !/^[\p{L}\p{M}'-]+$/u.test(word)) {
     return null;
   }
 
@@ -64,6 +64,30 @@ function getWordAtPoint(x, y) {
     range: wordRange,
     rect: wordRange.getBoundingClientRect()
   };
+}
+
+function shouldIgnoreHoverTarget(target) {
+  if (!target || typeof target.closest !== 'function') {
+    return false;
+  }
+
+  if (target.closest('#articler-tooltip')) {
+    return true;
+  }
+
+  if (target.closest('input, textarea, [contenteditable], [role="textbox"]')) {
+    return true;
+  }
+
+  if (target.closest('code, pre, kbd, samp')) {
+    return true;
+  }
+
+  if (target.closest('script, style, noscript')) {
+    return true;
+  }
+
+  return false;
 }
 
 // Tooltip oluştur
@@ -231,13 +255,12 @@ function saveWord() {
 document.addEventListener('mousemove', (e) => {
   if (!settings.enabled) return;
 
-  // Tooltip üzerindeyse işlem yapma
-  try {
-    if (e.target && typeof e.target.closest === 'function' && e.target.closest('#articler-tooltip')) {
-      return;
+  if (shouldIgnoreHoverTarget(e.target)) {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = null;
     }
-  } catch (err) {
-    // Closest desteklenmiyor veya hata, devam et
+    return;
   }
 
   // Önceki timeout'u temizle

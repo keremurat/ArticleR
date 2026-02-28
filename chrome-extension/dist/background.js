@@ -9,6 +9,127 @@ const DEFAULT_SETTINGS = {
   translationService: 'mymemory' // free API
 };
 
+const SUPPORTED_LANGUAGES = new Set([
+  'tr', 'en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'zh', 'ja', 'ko'
+]);
+
+const TRANSLATION_CACHE_TTL_MS = 60 * 60 * 1000;
+const TRANSLATION_CACHE_MAX_ENTRIES = 500;
+const TRANSLATION_TIMEOUT_MS = 5000;
+const TRANSLATION_MAX_RETRIES = 1;
+const BREAKER_FAILURE_THRESHOLD = 5;
+const BREAKER_COOLDOWN_MS = 60 * 1000;
+
+const translationCache = new Map();
+let translationConsecutiveFailures = 0;
+let translationBreakerOpenUntil = 0;
+
+function normalizeLanguageCode(lang) {
+  const code = String(lang || 'tr').toLowerCase().split('-')[0];
+  return SUPPORTED_LANGUAGES.has(code) ? code : 'tr';
+}
+
+function getTranslationCacheKey(text, sourceLang, targetLang) {
+  return `${sourceLang}|${targetLang}|${String(text).toLowerCase()}`;
+}
+
+function getCachedTranslation(cacheKey) {
+  const cached = translationCache.get(cacheKey);
+  if (!cached) return null;
+
+  if (Date.now() - cached.timestamp > TRANSLATION_CACHE_TTL_MS) {
+    translationCache.delete(cacheKey);
+    return null;
+  }
+
+  return cached.value;
+}
+
+function setCachedTranslation(cacheKey, value) {
+  if (!value) return;
+
+  if (translationCache.size >= TRANSLATION_CACHE_MAX_ENTRIES) {
+    const oldestKey = translationCache.keys().next().value;
+    if (oldestKey) {
+      translationCache.delete(oldestKey);
+    }
+  }
+
+  translationCache.set(cacheKey, {
+    value,
+    timestamp: Date.now()
+  });
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = TRANSLATION_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function onTranslationFailure() {
+  translationConsecutiveFailures += 1;
+
+  if (translationConsecutiveFailures >= BREAKER_FAILURE_THRESHOLD) {
+    translationBreakerOpenUntil = Date.now() + BREAKER_COOLDOWN_MS;
+  }
+}
+
+function onTranslationSuccess() {
+  translationConsecutiveFailures = 0;
+  translationBreakerOpenUntil = 0;
+}
+
+function isTranslationBreakerOpen() {
+  if (!translationBreakerOpenUntil) return false;
+
+  if (Date.now() >= translationBreakerOpenUntil) {
+    translationBreakerOpenUntil = 0;
+    return false;
+  }
+
+  return true;
+}
+
+async function requestMyMemoryTranslation(safeText, langPair) {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(safeText)}&langpair=${langPair}`;
+
+  const response = await fetchWithTimeout(url);
+  if (!response.ok) {
+    throw new Error(`MyMemory request failed (${response.status})`);
+  }
+
+  const data = await response.json();
+  if (data.responseStatus === 200 && data.responseData?.translatedText) {
+    return data.responseData.translatedText;
+  }
+
+  throw new Error('Translation service unavailable');
+}
+
+function detectSourceLanguage(text) {
+  if (!text) return 'en';
+
+  if (/[ğüşöçıİĞÜŞÖÇ]/.test(text)) return 'tr';
+  if (/[äöüßÄÖÜ]/.test(text)) return 'de';
+  if (/[àâçéèêëîïôûùüÿœæ]/i.test(text)) return 'fr';
+  if (/[áéíóúñ¿¡]/i.test(text)) return 'es';
+  if (/[àèéìíîòóù]/i.test(text)) return 'it';
+  if (/[ãõâêôç]/i.test(text)) return 'pt';
+  if (/[\u0400-\u04FF]/.test(text)) return 'ru';
+  if (/[\u0600-\u06FF]/.test(text)) return 'ar';
+  if (/[\u3040-\u30FF]/.test(text)) return 'ja';
+  if (/[\uAC00-\uD7AF]/.test(text)) return 'ko';
+  if (/[\u4E00-\u9FFF]/.test(text)) return 'zh';
+
+  return 'en';
+}
+
 // Extension yüklendiğinde
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
@@ -68,38 +189,57 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // Çeviri fonksiyonu - MyMemory Free API kullanımı
 async function handleTranslation(text, targetLang = 'tr') {
-  try {
-    // MyMemory Translation API (günlük 10000 karakter limiti, ücretsiz)
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`;
+  const safeText = String(text || '').trim();
+  if (!safeText) return '';
 
-    const response = await fetch(url);
-    const data = await response.json();
+  const normalizedTargetLang = normalizeLanguageCode(targetLang);
+  const sourceLang = detectSourceLanguage(safeText);
+  const langPair = `${sourceLang}|${normalizedTargetLang}`;
 
-    if (data.responseStatus === 200 && data.responseData) {
-      return data.responseData.translatedText;
+  if (sourceLang === normalizedTargetLang) {
+    return safeText;
+  }
+
+  const cacheKey = getTranslationCacheKey(safeText, sourceLang, normalizedTargetLang);
+  const cachedTranslation = getCachedTranslation(cacheKey);
+  if (cachedTranslation) {
+    return cachedTranslation;
+  }
+
+  if (!isTranslationBreakerOpen()) {
+    for (let attempt = 0; attempt <= TRANSLATION_MAX_RETRIES; attempt++) {
+      try {
+        const translatedText = await requestMyMemoryTranslation(safeText, langPair);
+        setCachedTranslation(cacheKey, translatedText);
+        onTranslationSuccess();
+        return translatedText;
+      } catch (error) {
+        if (attempt === TRANSLATION_MAX_RETRIES) {
+          onTranslationFailure();
+          console.error('Translation error:', error);
+        }
+      }
     }
+  }
 
-    // Alternatif olarak LibreTranslate API deneyebilir (kendi sunucunuz olması gerekir)
-    // veya Google Translate unofficial API
-    throw new Error('Translation service unavailable');
-  } catch (error) {
-    console.error('Translation error:', error);
-
+  try {
     // Fallback: Basit bir sözlük API'si
-    try {
-      const dictUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(text)}`;
-      const dictResponse = await fetch(dictUrl);
+    if (sourceLang === 'en') {
+      const dictUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(safeText)}`;
+      const dictResponse = await fetchWithTimeout(dictUrl);
       const dictData = await dictResponse.json();
 
       if (dictData[0]?.meanings[0]?.definitions[0]?.definition) {
-        return dictData[0].meanings[0].definitions[0].definition;
+        const fallbackTranslation = dictData[0].meanings[0].definitions[0].definition;
+        setCachedTranslation(cacheKey, fallbackTranslation);
+        return fallbackTranslation;
       }
-    } catch (dictError) {
-      console.error('Dictionary API error:', dictError);
     }
-
-    throw error;
+  } catch (dictError) {
+    console.error('Dictionary API error:', dictError);
   }
+
+  return safeText;
 }
 
 // Text-to-Speech fonksiyonu
