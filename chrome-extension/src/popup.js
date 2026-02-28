@@ -2,14 +2,45 @@
 
 let savedWords = [];
 let settings = {};
+let currentTheme = 'light';
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
+  await loadTheme();
   await loadSettings();
   await loadSavedWords();
   initializeEventListeners();
   updateStats();
 });
+
+// Load and apply theme
+async function loadTheme() {
+  const result = await chrome.storage.local.get(['theme']);
+  currentTheme = result.theme || 'light';
+  applyTheme(currentTheme);
+}
+
+// Apply theme to document
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const sunIcon = document.querySelector('.sun-icon');
+  const moonIcon = document.querySelector('.moon-icon');
+
+  if (theme === 'dark') {
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'block';
+  } else {
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
+  }
+}
+
+// Toggle theme
+async function toggleTheme() {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  applyTheme(currentTheme);
+  await chrome.storage.local.set({ theme: currentTheme });
+}
 
 // Load settings from storage
 async function loadSettings() {
@@ -114,6 +145,9 @@ function renderSavedWords(filterText = '') {
 
 // Initialize event listeners
 function initializeEventListeners() {
+  // Theme Toggle
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
   // Settings
   document.getElementById('enabledToggle').addEventListener('change', (e) => {
     settings.enabled = e.target.checked;

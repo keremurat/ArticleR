@@ -1,413 +1,267 @@
-# ArticleR - Bilimsel Makale Okuyucu
+# ArticleR - Academic Reading & Translation Suite
 
 <div align="center">
 
-![ArticleR Logo](https://img.shields.io/badge/ArticleR-Scientific%20Reader-blue?style=for-the-badge)
+![ArticleR](https://img.shields.io/badge/ArticleR-Academic%20Suite-6366f1?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=google-chrome)
 
-**Akademik PDF'leri okumak, anlamak ve incelemek için gelişmiş bir web uygulaması**
+**A complete suite for academic reading with instant translation, smart highlighting, and word tracking**
 
-[Özellikler](#-özellikler) • [Kurulum](#-kurulum) • [Kullanım](#-kullanım) • [Teknolojiler](#-teknolojiler)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📖 Proje Hakkında
+## 📖 About
 
-**ArticleR**, akademik makaleleri ve bilimsel dokümanları daha verimli okumak için tasarlanmış modern bir PDF okuyucusudur. Özellikle yabancı dilde yazılmış akademik metinleri anlamanızı kolaylaştırmak amacıyla geliştirilmiştir.
+**ArticleR** is a comprehensive academic reading solution consisting of two powerful tools:
 
-### 🎯 Projenin Amacı
+1. **🌐 Web Application** - Feature-rich PDF reader with translation and annotation
+2. **🔌 Chrome Extension** - Lightweight hover translation for any website
 
-Akademik araştırmacılar, öğrenciler ve bilim insanları için:
-
-- **Dil Bariyerini Kaldırma**: Yabancı dildeki makaleleri anında çevirerek okuma deneyimini iyileştirme
-- **Aktif Öğrenme**: Kelimeleri kaydederek kelime dağarcığınızı geliştirme
-- **Verimli Çalışma**: PDF'leri vurgulama ve arama yaparak önemli bilgilere hızlıca erişme
-- **Organize Çalışma**: Kelime defteri ile öğrendiğiniz terimleri takip etme
-
-### ✨ Temel Problem ve Çözüm
-
-**Problem**: Akademik makaleler genellikle İngilizce veya diğer yabancı dillerde yazılır. Okuyucular:
-- Bilinmeyen kelimeleri anlamak için sürekli sözlük aramak zorunda kalır
-- Önemli terimleri not almak için başka araçlar kullanır
-- PDF'lerde gezinmek ve arama yapmak zahmetlidir
-- Öğrenilen kelimeleri takip etmek zordur
-
-**Çözüm**: ArticleR tüm bu işlevleri tek bir arayüzde birleştirir:
-- ✅ Anında kelime çevirisi (seçerek veya üzerine gelerek)
-- ✅ Akıllı kelime defteri
-- ✅ Güçlü arama ve vurgulama
-- ✅ Sesli telaffuz desteği
-- ✅ Çoklu dil desteği
+Both tools share the same mission: **Break language barriers in academic research and accelerate learning.**
 
 ---
 
-## 🌟 Özellikler
+## 🎯 Problem & Solution
 
-### 1. 📄 Gelişmiş PDF Görüntüleme
-- **Yüksek Kaliteli Render**: React-PDF ile kristal netliğinde PDF gösterimi
-- **Zoom Kontrolü**: 50% - 300% arası yakınlaştırma/uzaklaştırma
-- **Sayfa Navigasyonu**: Klavye kısayolları (← →) ile hızlı gezinme
-- **Responsive Tasarım**: Mobil ve masaüstü uyumlu
+### The Problem
 
-### 2. 🌍 Çoklu Dil Çeviri Sistemi
+Academic researchers and students face constant challenges:
+- 📚 Papers are often in foreign languages (English, etc.)
+- 🔍 Constant dictionary lookups disrupt reading flow
+- 📝 Difficult to track and review learned terminology
+- ⏰ Time-consuming to annotate and organize findings
 
-#### 🔹 Seçerek Çeviri
-- Metni seçin, anında çeviri görün
-- 5 farklı dil desteği: Türkçe, İngilizce, Almanca, Fransızca, İspanyolca
-- Akademik terimler için özel sözlük
+### Our Solution
 
-#### 🔹 Hover Çeviri (Yenilikçi!)
-- Kelimeye mouse ile üzerine gelin
-- 400ms sonra otomatik çeviri görüntülenir
-- Okuma akışını bozmadan öğrenme
-
-#### 🔹 Sesli Telaffuz
-- Her kelimeyi native aksanla dinleyin
-- Web Speech API entegrasyonu
-- Öğrenmeyi pekiştirin
-
-### 3. 🔍 Akıllı Arama Sistemi
-- **Gerçek Zamanlı Arama**: PDF içeriğinde anında arama
-- **Görsel Vurgulama**: Eşleşen metinler sarı renkle vurgulanır
-- **Büyük/Küçük Harf Duyarsız**: "research" ve "Research" aynı sonucu verir
-- **Klavye Kısayolu**: `Ctrl+F` ile hızlı erişim
-
-### 4. 🎨 Renkli Metin Vurgulama
-- **4 Farklı Renk**: Sarı, Yeşil, Mavi, Pembe
-- **Kalıcı Vurgular**: LocalStorage'da otomatik kayıt
-- **Kolay Silme**: Vurguya tıklayarak kaldırın
-- **Sayfa Bazlı**: Her sayfada ayrı vurgular
-
-### 5. 📝 Kelime Defteri
-- **Otomatik Kayıt**: Çevrilen kelimeleri bir tıkla kaydedin
-- **Detaylı Bilgi**: Orijinal, çeviri, sayfa numarası, tarih
-- **Arama**: Kelime defterinde arama yapın
-- **Export**: CSV veya JSON formatında indirin
-- **Sayfa Referansı**: Kelimeye tıklayarak ilgili sayfaya gidin
-
-### 6. 🌓 Koyu/Açık Mod
-- Göz dostu karanlık tema
-- Otomatik kayıt
-- Gece okumak için ideal
-
-### 7. ⌨️ Klavye Kısayolları
-| Kısayol | İşlev |
-|---------|-------|
-| `Ctrl+F` | Arama kutusunu aç/kapat |
-| `Ctrl+Z` | Yakınlaştır |
-| `←` | Önceki sayfa |
-| `→` | Sonraki sayfa |
-| `Esc` | Çeviri/arama penceresini kapat |
+ArticleR provides:
+- ✅ **Instant Translation** - Hover or select words for immediate translation
+- ✅ **Smart Word Notebook** - Track, review, and export learned vocabulary
+- ✅ **PDF Annotations** - 4-color highlighting with search
+- ✅ **Audio Pronunciation** - Learn correct pronunciation with TTS
+- ✅ **Cross-Platform** - Web app for PDFs, extension for everything else
 
 ---
 
-## 🚀 Kurulum
+## 🚀 Quick Start
 
-### Gereksinimler
-- **Node.js**: 18.x veya üzeri
-- **npm** veya **yarn**
+### 📦 Installation
 
-### Adım 1: Projeyi Klonlayın
 ```bash
-git clone https://github.com/yourusername/articler.git
-cd articler
+# Clone the repository
+git clone https://github.com/yourusername/ArticleR.git
+cd ArticleR
 ```
 
-### Adım 2: Bağımlılıkları Yükleyin
+### 🌐 Web Application
+
 ```bash
+cd frontend
 npm install
-# veya
-yarn install
-```
-
-### Adım 3: Geliştirme Sunucusunu Başlatın
-```bash
 npm run dev
-# veya
-yarn dev
+# Open http://localhost:3000
 ```
 
-Uygulama [http://localhost:3000](http://localhost:3000) adresinde çalışacaktır.
+### 🔌 Chrome Extension
 
-### Adım 4: Production Build
+1. Navigate to `chrome-extension/dist/`
+2. Open Chrome → `chrome://extensions/`
+3. Enable "Developer mode"
+4. Click "Load unpacked" → Select `chrome-extension/dist/` folder
+
+**Done!** 🎉 Start translating on any website.
+
+---
+
+## 🌟 Features
+
+### Web Application Features
+
+| Feature | Description |
+|---------|-------------|
+| 📄 **PDF Viewing** | High-quality rendering, zoom (50%-300%), keyboard navigation |
+| 🌍 **Translation** | Instant word/sentence translation in 5+ languages |
+| 🖍️ **Highlighting** | 4-color highlighting system with persistence |
+| 🔍 **Search** | Real-time PDF content search with visual highlights |
+| 📝 **Word Notebook** | Save, search, and export learned vocabulary (CSV/JSON) |
+| 🎨 **Dark Mode** | Eye-friendly dark theme |
+| ⌨️ **Keyboard Shortcuts** | `Ctrl+F`, `←/→`, `Ctrl+Z`, etc. |
+
+### Chrome Extension Features
+
+| Feature | Description |
+|---------|-------------|
+| 🖱️ **Hover Translation** | Instant translation on mouse hover (any website) |
+| 💾 **Word Storage** | Save and review translated words |
+| 📊 **Statistics** | Track daily progress and learning streaks |
+| 🌍 **12+ Languages** | Turkish, English, Spanish, French, German, etc. |
+| 🔊 **Text-to-Speech** | Native pronunciation for all words |
+| 🌓 **Dark Mode** | Modern glassmorphism design with dark theme |
+| ⚙️ **Customizable** | Adjust hover delay, auto-speak, target language |
+
+---
+
+## 📂 Project Structure
+
+```
+ArticleR/
+│
+├── frontend/                    # Next.js Web Application
+│   ├── app/                    # Next.js App Router
+│   ├── components/             # React components
+│   │   ├── scholar/           # PDF-specific components
+│   │   └── ui/                # Reusable UI components (Radix UI)
+│   ├── lib/                   # Utilities, context, services
+│   ├── hooks/                 # Custom React hooks
+│   ├── public/                # Static assets
+│   ├── styles/                # Global styles
+│   └── package.json           # Frontend dependencies
+│
+├── chrome-extension/           # Chrome Extension
+│   ├── src/                   # Source files
+│   │   ├── background.js     # Service worker
+│   │   ├── content.js        # Content script
+│   │   └── popup.js          # Popup logic
+│   ├── dist/                  # Built extension (ready to load)
+│   ├── public/icons/          # Extension icons
+│   ├── popup.html             # Popup interface
+│   ├── popup.css              # Modern styles (glassmorphism)
+│   └── manifest.json          # Extension manifest (v3)
+│
+├── docs/                       # Documentation
+│   ├── KULLANIM_KILAVUZU.md   # Turkish user guide
+│   └── CHANGELOG.md           # Version history
+│
+├── README.md                   # This file
+├── LICENSE                     # MIT License
+└── .gitignore                 # Git ignore rules
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend (Web App)
+
+- **Framework:** [Next.js 16.0](https://nextjs.org/) with App Router
+- **UI Library:** [React 19.2](https://react.dev/)
+- **Language:** [TypeScript 5.0](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS 4.0](https://tailwindcss.com/)
+- **Components:** [Radix UI](https://www.radix-ui.com/)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **PDF Rendering:** [React-PDF](https://github.com/wojtekmaj/react-pdf)
+- **Translation API:** [MyMemory](https://mymemory.translated.net/)
+
+### Chrome Extension
+
+- **Language:** Vanilla JavaScript (ES6+)
+- **Manifest:** Chrome Extension Manifest V3
+- **Design:** Glassmorphism with CSS3
+- **Storage:** Chrome Storage API
+- **TTS:** Web Speech API
+
+---
+
+## 📖 Documentation
+
+- **[Frontend Documentation](./frontend/README.md)** - Web app setup and features
+- **[Extension Documentation](./chrome-extension/README.md)** - Extension installation and usage
+- **[User Guide (Turkish)](./docs/KULLANIM_KILAVUZU.md)** - Detailed usage instructions
+- **[Changelog](./docs/CHANGELOG.md)** - Version history
+
+---
+
+## 🎨 Screenshots
+
+### Web Application
+- PDF viewer with translation tooltip
+- Word notebook with export options
+- Search with visual highlighting
+- Dark mode interface
+
+### Chrome Extension
+- Modern glassmorphism popup
+- Hover translation on any website
+- Statistics dashboard
+- Dark theme toggle
+
+---
+
+## 🚧 Roadmap
+
+### Planned Features
+
+- [ ] **AI Summarization** - Auto-summarize PDFs with GPT-4
+- [ ] **Cloud Sync** - Sync words and highlights across devices
+- [ ] **OCR Support** - Text recognition for scanned PDFs
+- [ ] **Anki Integration** - Export words to Anki flashcards
+- [ ] **Multi-PDF** - Open multiple PDFs in tabs
+- [ ] **Collaboration** - Share annotations with teams
+- [ ] **Mobile App** - iOS/Android native apps
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions!
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Setup
+
 ```bash
-npm run build
-npm start
+# Frontend
+cd frontend
+npm install
+npm run dev
+
+# Extension
+cd chrome-extension
+# Edit files in src/, then copy to dist/
+./build.sh
 ```
 
 ---
 
-## 📱 Kullanım
+## 📄 License
 
-### 1. PDF Yükleme
-- Ana sayfada **"PDF Yükle"** butonuna tıklayın
-- Bilgisayarınızdan bir PDF dosyası seçin
-- PDF otomatik olarak yüklenecektir
-
-### 2. Çeviri Kullanımı
-
-#### Seçerek Çeviri:
-1. PDF'de herhangi bir kelime/cümleyi seçin
-2. Açılan pencerede çeviriyi görün
-3. 🔊 **Sesli Oku** butonuna basarak telaffuzu dinleyin
-4. ⭐ **Kaydet** butonuna basarak kelime defterine ekleyin
-
-#### Hover Çeviri:
-1. Sağ üstten **"Hover Çeviri"** modunu aktif edin
-2. Herhangi bir kelimeye mouse ile gelin
-3. 400ms sonra otomatik çeviri gösterilir
-
-### 3. Arama Yapma
-1. `Ctrl+F` tuşuna basın veya 🔍 ikonuna tıklayın
-2. Aramak istediğiniz kelimeyi yazın
-3. Eşleşen tüm metinler sarı renkle vurgulanır
-
-### 4. Metin Vurgulama
-1. 🖍️ **Highlighter** ikonuna tıklayın
-2. Bir renk seçin (Sarı/Yeşil/Mavi/Pembe)
-3. Vurgulamak istediğiniz metni seçin
-4. Vurgu otomatik kaydedilir
-5. Silmek için vurguya tıklayın
-
-### 5. Kelime Defteri
-1. 📖 **Kelime Defteri** ikonuna tıklayın
-2. Kaydedilen tüm kelimeleri görün
-3. Arama yapın veya export edin (CSV/JSON)
-4. Sayfa numarasına tıklayarak ilgili sayfaya gidin
+This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🛠️ Teknolojiler
+## 🙏 Acknowledgments
 
-### Frontend Framework
-- **[Next.js 16.0](https://nextjs.org/)** - React framework with App Router
-- **[React 19.2](https://react.dev/)** - UI library
-- **[TypeScript 5.0](https://www.typescriptlang.org/)** - Type safety
+This project uses the following open-source libraries:
 
-### UI & Styling
-- **[Tailwind CSS 4.0](https://tailwindcss.com/)** - Utility-first CSS
-- **[Radix UI](https://www.radix-ui.com/)** - Accessible components
-- **[Framer Motion](https://www.framer.com/motion/)** - Animations
-- **[Lucide React](https://lucide.dev/)** - Icon library
-
-### PDF & Translation
-- **[React-PDF](https://github.com/wojtekmaj/react-pdf)** - PDF rendering
-- **[PDF.js](https://mozilla.github.io/pdf.js/)** - PDF processing
-- **[MyMemory Translation API](https://mymemory.translated.net/)** - Free translation service
-- **[Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)** - Text-to-speech
-
-### State Management & Storage
-- **React Context API** - Global state
-- **LocalStorage** - Persistent data (words, highlights, preferences)
-
----
-
-## 📂 Proje Yapısı
-
-```
-articler/
-├── app/
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Ana sayfa
-│   └── globals.css         # Global stiller
-├── components/
-│   ├── scholar/
-│   │   ├── pdf-viewer.tsx         # Ana PDF görüntüleyici
-│   │   ├── pdf-upload.tsx         # PDF yükleme bileşeni
-│   │   ├── translation-tooltip.tsx # Çeviri tooltip'i
-│   │   └── word-notebook.tsx      # Kelime defteri
-│   └── ui/                 # Radix UI bileşenleri
-├── lib/
-│   ├── pdf-context.tsx     # PDF state yönetimi
-│   ├── translation.ts      # Çeviri servisi
-│   └── utils.ts            # Yardımcı fonksiyonlar
-├── hooks/
-│   ├── use-mobile.ts       # Mobil tespit hook'u
-│   └── use-toast.ts        # Toast bildirimleri
-├── public/                 # Statik dosyalar
-└── package.json            # Dependencies
-```
-
----
-
-## 🎨 Ekran Görüntüleri
-
-### Ana Ekran
-```
-┌─────────────────────────────────────────────────────────┐
-│  🏠 ArticleR              🌍 Türkçe  🔍 📖 🌓            │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌─────────────────────────┐                            │
-│  │                         │                            │
-│  │    PDF CONTENT          │                            │
-│  │    (Vurgulama ve        │                            │
-│  │     arama sonuçları)    │                            │
-│  │                         │                            │
-│  └─────────────────────────┘                            │
-│                                                          │
-├─────────────────────────────────────────────────────────┤
-│  ➖ 100% ➕ 📏         ◀ 1 / 10 ▶         ← → Ctrl+F    │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🔄 Çalışma Mantığı
-
-### 1. Çeviri Akışı
-```
-Kullanıcı Metni Seçer
-    ↓
-Dil Algılama (Türkçe/İngilizce/vb.)
-    ↓
-Local Sözlük Kontrolü
-    ↓ (bulunamazsa)
-MyMemory API İsteği
-    ↓
-Çeviri Gösterimi + Sesli Okuma Seçeneği
-    ↓ (isteğe bağlı)
-Kelime Defterine Kaydet
-```
-
-### 2. Vurgulama Akışı
-```
-Vurgulama Modu Aktif
-    ↓
-Kullanıcı Metni Seçer
-    ↓
-PDF Koordinatları Hesaplanır
-    ↓
-Highlight Objesi Oluşturulur
-    ↓
-LocalStorage'a Kaydedilir
-    ↓
-Overlay ile Görselleştirilir
-```
-
-### 3. Arama Akışı
-```
-Kullanıcı Arama Yapar
-    ↓
-300ms Debounce
-    ↓
-PDF Text Layer Taraması (TreeWalker)
-    ↓
-Eşleşen Metinler Bulunur
-    ↓
-<mark> Elementleri Eklenir
-    ↓
-Sarı Vurgulama Uygulanır
-```
-
----
-
-## 🧩 Özellik Detayları
-
-### Highlight System
-- **Koordinat Sistemi**: PDF sayfasına göre relative pozisyon
-- **Renk Seçimi**: 4 farklı renk paleti
-- **Kalıcılık**: LocalStorage ile otomatik kayıt
-- **Silme**: Hover + tıklama ile kolay silme
-
-### Translation Service
-- **API**: MyMemory (ücretsiz, API key gerektirmez)
-- **Fallback**: 35+ yaygın akademik terim için local sözlük
-- **Dil Algılama**: Regex ile Unicode karakter kontrolü
-- **Hata Yönetimi**: API hatalarında orijinal metin gösterimi
-
-### Word Notebook
-- **Data Structure**:
-  ```typescript
-  interface SavedWord {
-    id: string
-    original: string
-    translation: string
-    pageNumber: number
-    createdAt: Date
-  }
-  ```
-- **Export Formatları**: CSV (Excel uyumlu) ve JSON
-- **Arama**: Hem orijinal hem çeviri üzerinde arama
-
----
-
-## 🔐 Veri Güvenliği & Gizlilik
-
-- ✅ **Hiçbir veri sunucuya gönderilmez**
-- ✅ Tüm PDF'ler tarayıcıda işlenir
-- ✅ Kelime defteri ve vurgular LocalStorage'da tutulur
-- ✅ Çeviri API'si anonim kullanılır
-- ✅ Açık kaynak kod - şeffaflık
-
----
-
-## 🐛 Bilinen Sorunlar & Sınırlamalar
-
-1. **Tarayıcı Desteği**: Modern tarayıcılar gereklidir (Chrome, Firefox, Edge, Safari 14+)
-2. **PDF Boyutu**: Çok büyük PDF'ler (>50MB) yavaş yüklenebilir
-3. **Çeviri Limiti**: MyMemory API günlük 1000 karakter limiti vardır
-4. **Taranmış PDF'ler**: OCR içermeyen taranmış PDF'lerde metin seçimi çalışmaz
-
----
-
-## 🚧 Gelecek Geliştirmeler (Roadmap)
-
-- [ ] **AI Özet**: PDF'in otomatik özeti (GPT-4 entegrasyonu)
-- [ ] **Notlar**: Sayfalara not ekleme özelliği
-- [ ] **Cloud Sync**: Kelimeleri ve vurguları bulutta senkronize etme
-- [ ] **PDF Export**: Vurgulu PDF'i indirme
-- [ ] **OCR Desteği**: Taranmış PDF'lerde metin tanıma
-- [ ] **Anki Entegrasyonu**: Kelimeleri Anki'ye export etme
-- [ ] **Çoklu PDF**: Aynı anda birden fazla PDF açma
-- [ ] **Referans Yönetimi**: Bibliyografya oluşturma
-
----
-
-## 🤝 Katkıda Bulunma
-
-Katkılarınızı bekliyoruz!
-
-1. Fork yapın
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit yapın (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
----
-
-## 📄 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
-
----
-
-## 👨‍💻 Geliştirici
-
-**ArticleR Ekibi**
-
-Sorularınız için: [GitHub Issues](https://github.com/yourusername/articler/issues)
-
----
-
-## 🙏 Teşekkürler
-
-Bu proje aşağıdaki açık kaynak projeleri kullanmaktadır:
 - [React-PDF](https://github.com/wojtekmaj/react-pdf) - PDF rendering
 - [MyMemory API](https://mymemory.translated.net/) - Translation service
 - [Radix UI](https://www.radix-ui.com/) - Accessible components
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Tailwind CSS](https://tailwindcss.com/) - Styling framework
+
+---
+
+## 📧 Contact
+
+For questions, suggestions, or bug reports:
+
+- **GitHub Issues:** [Report a bug](https://github.com/yourusername/ArticleR/issues)
+- **Discussions:** [Join the conversation](https://github.com/yourusername/ArticleR/discussions)
 
 ---
 
 <div align="center">
 
-**Akademik başarınız için geliştirildi 📚✨**
+**Built with ❤️ for academics worldwide**
 
-[⭐ Star](https://github.com/yourusername/articler) • [🐛 Report Bug](https://github.com/yourusername/articler/issues) • [✨ Request Feature](https://github.com/yourusername/articler/issues)
+[⭐ Star this repo](https://github.com/yourusername/ArticleR) • [🐛 Report Bug](https://github.com/yourusername/ArticleR/issues) • [✨ Request Feature](https://github.com/yourusername/ArticleR/issues)
 
 </div>
