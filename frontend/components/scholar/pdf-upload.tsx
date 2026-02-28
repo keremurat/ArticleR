@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { useCallback, useState, useEffect } from "react"
+import { useCallback, useState, useSyncExternalStore } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Upload, FileText, X, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -13,12 +13,11 @@ export function PDFUpload() {
   const { setPdfFile, setPdfUrl, addRecentPdf, recentPdfs } = usePDF()
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [mounted, setMounted] = useState(false)
-
-  // Prevent hydration mismatch - only show recentPdfs after mount
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
 
   const handleFile = useCallback(
     (file: File) => {
