@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArticleR</title>
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    body {
+      min-width: 380px !important;
+      width: 380px !important;
+      height: 550px !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup-container">
+
+    <!-- Modern Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span class="brand-name">ArticleR</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button id="themeToggle" class="theme-toggle" title="Tema Değiştir">
+            <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          <label class="power-switch">
+            <input type="checkbox" id="enabledToggle" checked>
+            <span class="power-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6m8.66-13.66l-4.24 4.24M7.58 16.42l-4.24 4.24M23 12h-6m-6 0H1m20.66 8.66l-4.24-4.24M7.58 7.58L3.34 3.34"></path>
+        </svg>
+        <span>Ayarlar</span>
+      </button>
+      <button class="nav-tab" data-tab="words">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Kelimeler</span>
+      </button>
+      <button class="nav-tab" data-tab="stats">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>İstatistik</span>
+      </button>
+    </div>
+
+    <!-- Tab Content Container -->
+    <div class="tab-container">
+
+      <!-- Settings Tab -->
+      <div id="settingsTab" class="tab-content active">
+        <div class="settings-group">
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label class="setting-title">Hedef Dil</label>
+              <span class="setting-desc">Çeviri yapılacak dil</span>
+            </div>
+            <select id="targetLanguage" class="select-minimal">
+              <option value="tr">🇹🇷 Türkçe</option>
+              <option value="en">🇬🇧 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="it">🇮🇹 Italiano</option>
+              <option value="pt">🇵🇹 Português</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="ko">🇰🇷 한국어</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label class="setting-title">Gecikme Süresi</label>
+              <span class="setting-desc">Hover sonrası bekleme</span>
+            </div>
+            <div class="range-input">
+              <input type="range" id="hoverDelay" min="100" max="2000" step="100" value="500">
+              <span id="hoverDelayValue" class="range-value">500ms</span>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label class="setting-title">Otomatik Sesli Okuma</label>
+              <span class="setting-desc">Çeviri görününce oku</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="autoSpeakToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Words Tab -->
+      <div id="wordsTab" class="tab-content">
+        <div class="search-container">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Ara..." class="search-input">
+        </div>
+
+        <div id="savedWordsList" class="words-list">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            <p class="empty-title">Henüz kelime yok</p>
+            <span class="empty-desc">Çeviri yaptığınızda kaydedin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Tab -->
+      <div id="statsTab" class="tab-content">
+        <div class="stats-cards">
+          <div class="stat-card-mini">
+            <div class="stat-mini-label">Toplam</div>
+            <div class="stat-mini-value" id="totalWords">0</div>
+          </div>
+          <div class="stat-card-mini">
+            <div class="stat-mini-label">Bugün</div>
+            <div class="stat-mini-value" id="todayWords">0</div>
+          </div>
+          <div class="stat-card-mini">
+            <div class="stat-mini-label">Seri</div>
+            <div class="stat-mini-value" id="streakDays">
+              <span class="streak-emoji">🔥</span>
+              <span id="streakValue">0</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="exportBtn" class="btn-export">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Kelimeleri İndir</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

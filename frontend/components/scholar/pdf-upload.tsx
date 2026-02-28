@@ -95,7 +95,7 @@ export function PDFUpload() {
               <FileText className="size-8 text-primary-foreground" />
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-foreground">
-              Schol<span className="text-secondary">AR</span>
+              Article<span className="text-secondary">R</span>
             </h1>
           </motion.div>
           <p className="text-lg text-muted-foreground">Bilimsel Makale Okuyucu</p>

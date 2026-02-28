@@ -1,0 +1,240 @@
+/* Content Script Styles - Injected into web pages */
+
+.articler-tooltip {
+  position: absolute;
+  z-index: 999999;
+  width: 300px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.articler-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.articler-tooltip-content {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .articler-tooltip-content {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+}
+
+.articler-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.articler-close-btn:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+@media (prefers-color-scheme: dark) {
+  .articler-close-btn:hover {
+    background: #334155;
+    color: #f1f5f9;
+  }
+}
+
+.articler-original {
+  margin-bottom: 12px;
+  padding-right: 20px;
+}
+
+.articler-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.articler-original-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.4;
+}
+
+@media (prefers-color-scheme: dark) {
+  .articler-original-text {
+    color: #f1f5f9;
+  }
+}
+
+.articler-translation {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .articler-translation {
+    background: #0f172a;
+  }
+}
+
+.articler-translation-text {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+  min-height: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .articler-translation-text {
+    color: #cbd5e1;
+  }
+}
+
+.articler-loader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.articler-loader::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: articler-spin 0.6s linear infinite;
+}
+
+@keyframes articler-spin {
+  to { transform: rotate(360deg); }
+}
+
+.articler-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.articler-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.articler-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.articler-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.articler-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.articler-save-btn {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.articler-save-btn:hover:not(:disabled) {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .articler-btn {
+    background: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+  }
+
+  .articler-btn:hover:not(:disabled) {
+    background: #475569;
+    border-color: #64748b;
+  }
+}
+
+/* Arrow pointing to the word */
+.articler-tooltip-content::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ffffff;
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.06));
+}
+
+@media (prefers-color-scheme: dark) {
+  .articler-tooltip-content::before {
+    border-bottom-color: #1e293b;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .articler-tooltip {
+    width: 280px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .articler-tooltip {
+    display: none !important;
+  }
+}

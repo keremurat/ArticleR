@@ -375,7 +375,7 @@ export function PDFViewer() {
             <div className="flex items-center gap-2 text-lg font-semibold text-foreground">
               <BookOpen className="size-5 text-secondary" />
               <span>
-                Schol<span className="text-secondary">AR</span>
+                Article<span className="text-secondary">R</span>
               </span>
             </div>
           </div>
