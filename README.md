@@ -54,7 +54,7 @@ ArticleR provides:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ArticleR.git
+git clone https://github.com/keremurat/ArticleR.git
 cd ArticleR
 ```
 
@@ -75,6 +75,14 @@ npm run dev
 4. Click "Load unpacked" → Select `chrome-extension/dist/` folder
 
 **Done!** 🎉 Start translating on any website.
+
+### ⚡ 1-Minute First Use
+
+1. Start the web app with `npm run dev` in `frontend/`.
+2. Open a sample PDF and hover a word to see translation.
+3. Click ⭐ on a translated word to save it to Word Notebook.
+4. Open Word Notebook and verify search/export works.
+5. (Optional) Load the extension and test hover translation on any website.
 
 ---
 
@@ -174,6 +182,7 @@ ArticleR/
 - **[Extension Documentation](./chrome-extension/README.md)** - Extension installation and usage
 - **[User Guide (Turkish)](./docs/KULLANIM_KILAVUZU.md)** - Detailed usage instructions
 - **[Smoke Test Checklist](./docs/SMOKE_TEST_CHECKLIST.md)** - Pre-release validation steps
+- **[Public Release Checklist](./docs/PUBLIC_RELEASE_CHECKLIST.md)** - Minimum readiness checks before public launch
 - **[Changelog](./docs/CHANGELOG.md)** - Version history
 - **[Quality Gate Workflow](./.github/workflows/quality-gate.yml)** - CI lint/build checks
 - **[Security Audit Workflow](./.github/workflows/security-audit.yml)** - Weekly high-severity audit + JSON artifact report
@@ -259,8 +268,8 @@ This project uses the following open-source libraries:
 
 For questions, suggestions, or bug reports:
 
-- **GitHub Issues:** [Report a bug](https://github.com/yourusername/ArticleR/issues)
-- **Discussions:** [Join the conversation](https://github.com/yourusername/ArticleR/discussions)
+- **GitHub Issues:** Use the **Issues** tab in this repository
+- **Discussions:** Use the **Discussions** tab in this repository
 
 ---
 
@@ -268,6 +277,6 @@ For questions, suggestions, or bug reports:
 
 **Built with ❤️ for academics worldwide**
 
-[⭐ Star this repo](https://github.com/yourusername/ArticleR) • [🐛 Report Bug](https://github.com/yourusername/ArticleR/issues) • [✨ Request Feature](https://github.com/yourusername/ArticleR/issues)
+⭐ Star this repo • 🐛 Report Bug (Issues) • ✨ Request Feature (Issues)
 
 </div>

@@ -33,8 +33,8 @@ Web sayfalarında kelimelerin üzerine gelerek anında çeviri yapın. Akademik 
 
 1. **Repository'yi klonlayın**:
    ```bash
-   git clone https://github.com/yourusername/articler.git
-   cd articler/extension
+   git clone https://github.com/keremurat/ArticleR.git
+   cd ArticleR/chrome-extension
    ```
 
 2. **Extension'ı derleyin**:
@@ -47,13 +47,21 @@ Web sayfalarında kelimelerin üzerine gelerek anında çeviri yapın. Akademik 
    - Chrome'u açın ve `chrome://extensions/` adresine gidin
    - Sağ üstteki "Geliştirici modu" (Developer mode) toggle'ını aktif edin
    - "Paketlenmemiş uzantı yükle" (Load unpacked) butonuna tıklayın
-   - `extension/dist` klasörünü seçin
+   - `chrome-extension/dist` klasörünü seçin
 
 4. **Kullanmaya başlayın**! 🎉
 
-### Chrome Web Store'dan Kurulum (Yakında)
+### Chrome Web Store'dan Kurulum
 
-Extension henüz Chrome Web Store'da yayınlanmadı. Yayınlandığında buradan bağlantı paylaşılacak.
+Extension henüz Chrome Web Store'da yayınlanmadı. Yayınlanana kadar bu rehberdeki **Geliştirici Modunda Kurulum** adımlarını kullanın.
+
+## ⚡ 1 Dakikada İlk Kullanım
+
+1. Herhangi bir web sayfasını açın.
+2. Bir kelimenin üzerine gelin ve tooltip'in açılmasını bekleyin.
+3. ⭐ ile kelimeyi kaydedin.
+4. Eklenti popup'ını açıp **Kaydedilenler** sekmesinde kelimeyi doğrulayın.
+5. Arama kutusundan kelimeyi bulup 🔊 ile telaffuzunu dinleyin.
 
 ## 🎨 Kullanım
 
@@ -202,12 +210,11 @@ Katkılarınızı bekliyoruz!
 ## 🐛 Sorun Bildirme
 
 Bir sorun mu buldunuz? GitHub Issues'da bildirin:
-https://github.com/yourusername/articler/issues
+Bu repository'deki **Issues** sekmesini kullanın.
 
 ## 📧 İletişim
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: Bu repository üzerinden iletişime geçin (Issues/Discussions)
 
 ## 🙏 Teşekkürler
 

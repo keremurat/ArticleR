@@ -2,13 +2,14 @@
 
 ## İçindekiler
 1. [Hızlı Başlangıç](#1-hızlı-başlangıç)
-2. [PDF Yükleme](#2-pdf-yükleme)
-3. [Çeviri Özellikleri](#3-çeviri-özellikleri)
-4. [Arama ve Vurgulama](#4-arama-ve-vurgulama)
-5. [Kelime Defteri](#5-kelime-defteri)
-6. [Klavye Kısayolları](#6-klavye-kısayolları)
-7. [İpuçları ve Püf Noktaları](#7-ipuçları-ve-püf-noktaları)
-8. [Sık Sorulan Sorular](#8-sık-sorulan-sorular)
+2. [1 Dakikada İlk Kullanım Checklist](#2-1-dakikada-ilk-kullanım-checklist)
+3. [PDF Yükleme](#3-pdf-yükleme)
+4. [Çeviri Özellikleri](#4-çeviri-özellikleri)
+5. [Arama ve Vurgulama](#5-arama-ve-vurgulama)
+6. [Kelime Defteri](#6-kelime-defteri)
+7. [Klavye Kısayolları](#7-klavye-kısayolları)
+8. [İpuçları ve Püf Noktaları](#8-ipuçları-ve-püf-noktaları)
+9. [Sık Sorulan Sorular](#9-sık-sorulan-sorular)
 
 ---
 
@@ -38,7 +39,22 @@ Uygulamayı açtığınızda karşınıza bir **hoş geldiniz ekranı** çıkaca
 
 ---
 
-## 2. PDF Yükleme
+## 2. 1 Dakikada İlk Kullanım Checklist
+
+Kurulumdan hemen sonra bu adımları sırayla tamamlayın:
+
+1. ✅ Uygulamayı açın ve bir PDF yükleyin.
+2. ✅ PDF içinde bir kelime seçip çeviri penceresinin açıldığını doğrulayın.
+3. ✅ Çeviri penceresinde `⭐ Kaydet` ile kelimeyi deftere ekleyin.
+4. ✅ `📖 Kelime Defteri` panelini açıp kaydın göründüğünü doğrulayın.
+5. ✅ `Ctrl + F` ile arama kutusunu açıp PDF içinde bir kelime arayın.
+6. ✅ (Opsiyonel) Hover çeviriyi açıp bir kelime üzerinde otomatik tooltip’i test edin.
+
+Bu 6 adım başarılıysa temel kullanım akışı doğru çalışıyor demektir.
+
+---
+
+## 3. PDF Yükleme
 
 ### Adım Adım PDF Yükleme
 
@@ -71,7 +87,7 @@ PDF yüklendiğinde ana okuyucu arayüzü açılır:
 
 ---
 
-## 3. Çeviri Özellikleri
+## 4. Çeviri Özellikleri
 
 ArticleR'da **3 farklı çeviri modu** vardır:
 
@@ -166,7 +182,7 @@ Her çevrilen kelimeyi sesli olarak dinleyebilirsiniz.
 
 ---
 
-## 4. Arama ve Vurgulama
+## 5. Arama ve Vurgulama
 
 ### 🔍 PDF İçinde Arama
 
@@ -230,7 +246,7 @@ Makalede belirli kelimeleri hızlıca bulun.
 
 ---
 
-## 5. Kelime Defteri
+## 6. Kelime Defteri
 
 Öğrendiğiniz kelimeleri kaydedin ve takip edin.
 
@@ -321,7 +337,7 @@ hypothesis,hipotez,5,01.02.2024
 
 ---
 
-## 6. Klavye Kısayolları
+## 7. Klavye Kısayolları
 
 Hızlı çalışmak için klavye kısayolları:
 
@@ -337,7 +353,7 @@ Hızlı çalışmak için klavye kısayolları:
 
 ---
 
-## 7. İpuçları ve Püf Noktaları
+## 8. İpuçları ve Püf Noktaları
 
 ### 🎯 Verimli Okuma İpuçları
 
@@ -428,7 +444,7 @@ Bir kavramın makalede nasıl kullanıldığını görmek için:
 
 ---
 
-## 8. Sık Sorulan Sorular
+## 9. Sık Sorulan Sorular
 
 ### ❓ PDF Yükleme Sorunları
 
