@@ -31,6 +31,13 @@ if [ -d "public/icons" ]; then
   cp -r public/icons/* dist/icons/
 fi
 
+# Copy branding logos (if they exist)
+if [ -d "public/branding" ]; then
+  echo "🏷️ Copying branding logos..."
+  mkdir -p dist/public/branding
+  cp -r public/branding/* dist/public/branding/
+fi
+
 # Create zip file for Chrome Web Store
 echo "📦 Creating zip file..."
 cd dist
