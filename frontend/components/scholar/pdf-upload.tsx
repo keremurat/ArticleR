@@ -2,22 +2,17 @@
 
 import React from "react"
 
-import { useCallback, useState, useSyncExternalStore } from "react"
+import { useCallback, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Upload, FileText, X, Clock } from "lucide-react"
+import { Upload, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { usePDF } from "@/lib/pdf-context"
 
 export function PDFUpload() {
-  const { setPdfFile, setPdfUrl, addRecentPdf, recentPdfs } = usePDF()
+  const { setPdfFile, setPdfUrl } = usePDF()
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  )
 
   const handleFile = useCallback(
     (file: File) => {
@@ -36,9 +31,8 @@ export function PDFUpload() {
       const url = URL.createObjectURL(file)
       setPdfFile(file)
       setPdfUrl(url)
-      addRecentPdf(file.name)
     },
-    [setPdfFile, setPdfUrl, addRecentPdf]
+    [setPdfFile, setPdfUrl]
   )
 
   const handleDrop = useCallback(
@@ -91,7 +85,18 @@ export function PDFUpload() {
             className="mb-4 flex items-center justify-center gap-3"
           >
             <div className="flex size-14 items-center justify-center rounded-xl bg-primary shadow-lg">
-              <FileText className="size-8 text-primary-foreground" />
+              <svg
+                className="size-8 text-primary-foreground"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-foreground">
               Article<span className="text-secondary">R</span>
@@ -165,34 +170,27 @@ export function PDFUpload() {
           )}
         </AnimatePresence>
 
-        {/* Recent PDFs - only render after mount to prevent hydration mismatch */}
-        {mounted && recentPdfs.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8"
+        <div className="mt-8 flex items-center justify-center gap-4 text-lg text-muted-foreground">
+          <a
+            href="https://eistatistik.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="eistatistik.com"
+            className="inline-flex items-center"
           >
-            <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="size-4" />
-              <span>Son açılan dosyalar</span>
-            </div>
-            <div className="space-y-2">
-              {recentPdfs.map((pdf, index) => (
-                <motion.div
-                  key={pdf.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                  className="flex w-full items-center gap-3 rounded-lg border bg-card p-3 text-left"
-                >
-                  <FileText className="size-5 text-secondary" />
-                  <span className="flex-1 truncate text-sm text-foreground">{pdf.name}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+            <img
+              src="/branding/logosiyah_reduce.png"
+              alt="Firma logosu"
+              className="h-8 w-auto max-w-48 object-contain dark:hidden"
+            />
+            <img
+              src="/branding/logobeyaz-reduce.png"
+              alt="Firma logosu"
+              className="hidden h-8 w-auto max-w-48 object-contain dark:block"
+            />
+          </a>
+          <span className="font-sans font-semibold tracking-tight">tarafından geliştirildi</span>
+        </div>
       </motion.div>
     </div>
   )

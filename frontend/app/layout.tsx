@@ -1,8 +1,16 @@
 import React from "react"
 import type { Metadata } from 'next'
+import { Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { WebVitalsReporter } from "@/components/web-vitals-reporter"
 import './globals.css'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
+})
 
 export const viewport = {
   width: 'device-width',
@@ -70,7 +78,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" suppressHydrationWarning>
-      <body className={`font-sans antialiased`}>
+      <body className={`${poppins.variable} font-sans antialiased`}>
         {children}
         <WebVitalsReporter />
         <Analytics />

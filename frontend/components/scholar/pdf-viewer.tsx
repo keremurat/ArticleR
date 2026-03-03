@@ -371,7 +371,18 @@ export function PDFViewer() {
             </Tooltip>
             <div className="h-6 w-px bg-border" />
             <div className="flex items-center gap-2 text-lg font-semibold text-foreground">
-              <BookOpen className="size-5 text-secondary" />
+              <svg
+                className="size-5 text-secondary"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
               <span>
                 Article<span className="text-secondary">R</span>
               </span>
@@ -582,9 +593,9 @@ export function PDFViewer() {
         </div>
 
         {/* Bottom Toolbar */}
-        <footer className="flex items-center justify-between border-t bg-card px-4 py-2">
+        <footer className="grid min-h-16 grid-cols-3 items-center border-t bg-card px-4 py-3">
           {/* Zoom Controls */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center justify-start gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon-sm" onClick={zoomOut} disabled={scale <= 0.5}>
@@ -613,7 +624,7 @@ export function PDFViewer() {
           </div>
 
           {/* Page Navigation */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon-sm" onClick={goToPreviousPage} disabled={currentPage <= 1}>
@@ -650,12 +661,35 @@ export function PDFViewer() {
             </Tooltip>
           </div>
 
-          {/* Keyboard Shortcuts Hint */}
-          <div className="hidden text-xs text-muted-foreground md:block">
-            <span className="rounded bg-muted px-1.5 py-0.5">←</span>{" "}
-            <span className="rounded bg-muted px-1.5 py-0.5">→</span> Sayfa değiştir •{" "}
-            <span className="rounded bg-muted px-1.5 py-0.5">Ctrl+F</span> Ara •{" "}
-            <span className="rounded bg-muted px-1.5 py-0.5">Esc</span> Kapat
+          {/* Keyboard Shortcuts Hint + Branding */}
+          <div className="flex items-center justify-end gap-4">
+            <div className="hidden text-xs text-muted-foreground xl:block">
+              <span className="rounded bg-muted px-1.5 py-0.5">←</span>{" "}
+              <span className="rounded bg-muted px-1.5 py-0.5">→</span> Sayfa değiştir •{" "}
+              <span className="rounded bg-muted px-1.5 py-0.5">Ctrl+F</span> Ara •{" "}
+              <span className="rounded bg-muted px-1.5 py-0.5">Esc</span> Kapat
+            </div>
+            <div className="flex items-center gap-3 rounded-full border border-border/70 bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground shadow-sm backdrop-blur-sm md:text-base">
+              <a
+                href="https://eistatistik.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="eistatistik.com"
+                className="inline-flex items-center transition-transform duration-200 hover:scale-[1.02]"
+              >
+                <img
+                  src="/branding/logosiyah_reduce.png"
+                  alt="Firma logosu"
+                  className="h-6 w-auto max-w-40 object-contain dark:hidden md:h-7 md:max-w-44"
+                />
+                <img
+                  src="/branding/logobeyaz-reduce.png"
+                  alt="Firma logosu"
+                  className="hidden h-6 w-auto max-w-40 object-contain dark:block md:h-7 md:max-w-44"
+                />
+              </a>
+              <span className="font-semibold tracking-tight">tarafından geliştirildi</span>
+            </div>
           </div>
         </footer>
 
