@@ -23,6 +23,7 @@ cp src/popup.js dist/popup.js
 cp popup.html dist/popup.html
 cp popup.css dist/popup.css
 cp welcome.html dist/welcome.html
+cp welcome.js dist/welcome.js
 cp debug-storage.html dist/debug-storage.html
 
 # Copy icons (if they exist)

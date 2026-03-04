@@ -9,11 +9,12 @@ import { translateText, speakText } from "@/lib/translation"
 
 interface TranslationTooltipProps {
   selectedText: string
+  contextText?: string | null
   position: { x: number; y: number }
   onClose: () => void
 }
 
-export function TranslationTooltip({ selectedText, position, onClose }: TranslationTooltipProps) {
+export function TranslationTooltip({ selectedText, contextText, position, onClose }: TranslationTooltipProps) {
   const { targetLanguage, addWord, currentPage } = usePDF()
   const [translation, setTranslation] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -25,7 +26,7 @@ export function TranslationTooltip({ selectedText, position, onClose }: Translat
     async function fetchTranslation() {
       setIsLoading(true)
       try {
-        const result = await translateText(selectedText, targetLanguage)
+        const result = await translateText(selectedText, targetLanguage, contextText || undefined)
         if (mounted) {
           setTranslation(result)
         }
@@ -45,7 +46,7 @@ export function TranslationTooltip({ selectedText, position, onClose }: Translat
     return () => {
       mounted = false
     }
-  }, [selectedText, targetLanguage])
+  }, [selectedText, targetLanguage, contextText])
 
   const handleSpeak = useCallback(() => {
     speakText(selectedText, "en")

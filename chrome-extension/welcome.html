@@ -13,21 +13,22 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #f1f5f9;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
     }
 
     .welcome-container {
-      max-width: 600px;
+      max-width: 640px;
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
       overflow: hidden;
-      animation: slideUp 0.5s ease;
+      animation: slideUp 0.35s ease;
     }
 
     @keyframes slideUp {
@@ -42,69 +43,66 @@
     }
 
     .welcome-header {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      padding: 40px 30px;
+      background: #ffffff;
+      color: #0f172a;
+      padding: 30px 30px 22px;
       text-align: center;
+      border-bottom: 1px solid #e2e8f0;
     }
 
     .welcome-icon {
-      width: 80px;
-      height: 80px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
+      width: 68px;
+      height: 68px;
+      background: #eef2ff;
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
-      backdrop-filter: blur(10px);
+      margin: 0 auto 16px;
     }
 
     .welcome-icon svg {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
+      color: #4f46e5;
     }
 
     .welcome-header h1 {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
     }
 
     .welcome-header p {
-      font-size: 16px;
-      opacity: 0.95;
+      font-size: 15px;
+      color: #475569;
     }
 
     .welcome-content {
-      padding: 40px 30px;
+      padding: 28px 30px;
     }
 
     .feature-list {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
     }
 
     .feature-item {
       display: flex;
       align-items: flex-start;
       gap: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       padding: 15px;
       background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 12px;
-      transition: all 0.2s;
-    }
-
-    .feature-item:hover {
-      background: #f1f5f9;
-      transform: translateX(5px);
     }
 
     .feature-icon {
       width: 40px;
       height: 40px;
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      background: #4f46e5;
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -132,23 +130,22 @@
     }
 
     .activation-section {
-      background: #fef3c7;
-      border: 2px solid #fbbf24;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 12px;
       padding: 20px;
-      margin-bottom: 30px;
       text-align: center;
     }
 
     .activation-section h2 {
       font-size: 18px;
-      color: #92400e;
+      color: #0f172a;
       margin-bottom: 12px;
     }
 
     .activation-section p {
       font-size: 14px;
-      color: #78350f;
+      color: #64748b;
       margin-bottom: 20px;
     }
 
@@ -173,20 +170,19 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      background: #4f46e5;
       color: white;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+      background: #4338ca;
     }
 
     .btn-secondary {
       background: white;
-      color: #64748b;
-      border: 2px solid #e2e8f0;
+      color: #475569;
+      border: 1px solid #d1d5db;
     }
 
     .btn-secondary:hover {
@@ -194,15 +190,12 @@
       background: #f8fafc;
     }
 
-    .btn:active {
-      transform: translateY(0);
-    }
-
     .footer {
       text-align: center;
-      padding: 20px 30px;
+      padding: 22px 24px 24px;
       background: #f8fafc;
-      font-size: 13px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 14px;
       color: #64748b;
     }
 
@@ -213,6 +206,172 @@
 
     .footer a:hover {
       text-decoration: underline;
+    }
+
+    .guide-trigger {
+      border: none;
+      background: transparent;
+      color: #3b82f6;
+      cursor: pointer;
+      font: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .guide-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+
+    .guide-modal.open {
+      display: flex;
+    }
+
+    .guide-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    .guide-dialog {
+      position: relative;
+      width: min(560px, 100%);
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.2);
+      padding: 22px;
+      z-index: 1;
+    }
+
+    .guide-dialog h3 {
+      font-size: 20px;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .guide-dialog p {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .guide-intro {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .guide-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .guide-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .guide-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      border-radius: 999px;
+      background: #4f46e5;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .guide-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .guide-tip-box {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .guide-shortcuts {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .guide-kbd {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-size: 12px;
+      color: #334155;
+    }
+
+    .guide-close {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #334155;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .footer-branding {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #64748b;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .footer-branding-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .footer-branding img {
+      height: 28px;
+      width: auto;
+      max-width: 170px;
+      object-fit: contain;
     }
 
     .checkmark {
@@ -311,102 +470,41 @@
     <div class="footer">
       <p>
         Yardıma mı ihtiyacınız var?
-        <a href="https://github.com/yourusername/articler" target="_blank">Kullanım Kılavuzu</a>
+        <button class="guide-trigger" id="guideTrigger">Kullanım Kılavuzu</button>
       </p>
+      <div class="footer-branding">
+        <a class="footer-branding-link" href="https://eistatistik.com/" target="_blank" rel="noopener noreferrer" title="eistatistik.com">
+          <img src="public/branding/logosiyah_reduce.png" alt="Firma logosu">
+        </a>
+        <span>tarafından geliştirildi</span>
+      </div>
     </div>
   </div>
 
-  <script>
-    // Aktif Et butonu
-    document.getElementById('activateBtn').addEventListener('click', async () => {
-      try {
-        console.log('Activating extension...');
+  <div class="guide-modal" id="guideModal" aria-hidden="true">
+    <div class="guide-backdrop" id="guideBackdrop"></div>
+    <div class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <h3 id="guideTitle">ArticleR Nasıl Kullanılır?</h3>
+      <p class="guide-intro">ArticleR, web sayfalarında bilmediğiniz kelimeleri anında çevirmenizi sağlar. İlk kullanım için aşağıdaki adımları izleyin.</p>
+      <ul class="guide-list">
+        <li><span class="guide-step">1</span><span>Bir makale, blog veya döküman sayfası açın. Çevirmek istediğiniz kelimenin üzerine imleci kısa süre bekletin.</span></li>
+        <li><span class="guide-step">2</span><span>Açılan kutuda kelimenin çevirisini görün. Ses ikonuyla telaffuz dinleyebilir, yıldızla kelimeyi kaydedebilirsiniz.</span></li>
+        <li><span class="guide-step">3</span><span>Tarayıcıdaki ArticleR popup’ını açın. Hedef dili değiştirin ve hover bekleme süresini kendi kullanımınıza göre ayarlayın.</span></li>
+        <li><span class="guide-step">4</span><span>Kaydettiğiniz kelimeleri "Kelimeler" sekmesinden arayın, takip edin ve ihtiyaç halinde dışa aktarın.</span></li>
+      </ul>
+      <div class="guide-tip-box">
+        İpucu: Çok sık çeviri tetikleniyorsa bekleme süresini artırın. Daha hızlı kullanım için popup ayarlarından süreyi düşürebilirsiniz.
+        <div class="guide-shortcuts">
+          <span class="guide-kbd">Esc: Açık kutuyu kapat</span>
+          <span class="guide-kbd">Popup: Dil ve davranış ayarları</span>
+        </div>
+      </div>
+      <div class="guide-actions">
+        <button class="guide-close" id="guideCloseBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
 
-        // Extension'ı aktif et
-        await chrome.storage.sync.set({
-          settings: {
-            enabled: true,
-            targetLanguage: 'tr',
-            hoverDelay: 500,
-            autoSpeak: false
-          },
-          onboardingCompleted: true
-        });
-
-        console.log('Settings saved successfully');
-
-        // Başarı animasyonu göster
-        const activationSection = document.querySelector('.activation-section');
-        activationSection.style.background = '#d1fae5';
-        activationSection.style.borderColor = '#10b981';
-        activationSection.innerHTML = `
-          <div style="text-align: center; padding: 20px;">
-            <div style="width: 60px; height: 60px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-            <h2 style="color: #059669; margin-bottom: 10px;">Aktif Edildi! ✨</h2>
-            <p style="color: #047857;">Sekme kapatılıyor...</p>
-          </div>
-        `;
-
-        // 1 saniye bekle, sonra sekmeyi kapat
-        setTimeout(() => {
-          console.log('Closing tab...');
-          window.close();
-        }, 1000);
-
-      } catch (error) {
-        console.error('Activation error:', error);
-        alert('Ayarlar kaydedildi ancak sayfa kapatılamadı. Manuel olarak kapatabilirsiniz.');
-      }
-    });
-
-    // Daha Sonra butonu
-    document.getElementById('skipBtn').addEventListener('click', async () => {
-      try {
-        console.log('Skipping activation...');
-
-        // Eklenti pasif olarak işaretle
-        await chrome.storage.sync.set({
-          settings: {
-            enabled: false,
-            targetLanguage: 'tr',
-            hoverDelay: 500,
-            autoSpeak: false
-          },
-          onboardingCompleted: true
-        });
-
-        console.log('Settings saved, closing tab...');
-
-        // Hemen sekmeyi kapat
-        window.close();
-
-      } catch (error) {
-        console.error('Skip error:', error);
-        // Hata olsa bile sekmeyi kapat
-        window.close();
-      }
-    });
-
-    // Klavye kısayolları
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('activateBtn').click();
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        document.getElementById('skipBtn').click();
-      }
-    });
-
-    // Sayfa yüklendiğinde focus
-    window.addEventListener('load', () => {
-      document.getElementById('activateBtn').focus();
-      console.log('Welcome page loaded');
-    });
-  </script>
+  <script src="welcome.js"></script>
 </body>
 </html>

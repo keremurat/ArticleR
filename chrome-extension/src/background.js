@@ -29,8 +29,69 @@ function normalizeLanguageCode(lang) {
   return SUPPORTED_LANGUAGES.has(code) ? code : 'tr';
 }
 
-function getTranslationCacheKey(text, sourceLang, targetLang) {
-  return `${sourceLang}|${targetLang}|${String(text).toLowerCase()}`;
+function getTranslationCacheKey(text, sourceLang, targetLang, contextSignature = '') {
+  return `${sourceLang}|${targetLang}|${String(text).toLowerCase()}|${contextSignature}`;
+}
+
+function normalizeWords(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s'-]/gu, ' ')
+    .split(/\s+/)
+    .map((word) => word.trim())
+    .filter(Boolean);
+}
+
+function buildContextSignature(contextText) {
+  if (!contextText) return '';
+  return normalizeWords(contextText).slice(0, 24).join(' ');
+}
+
+function pickContextAwareTranslation(data, selectedText, contextText) {
+  if (!contextText || !Array.isArray(data?.matches)) {
+    return null;
+  }
+
+  const selectedWord = String(selectedText || '').toLowerCase();
+  const contextWords = new Set(
+    normalizeWords(contextText).filter((word) => word !== selectedWord)
+  );
+
+  if (contextWords.size === 0) {
+    return null;
+  }
+
+  let bestCandidate = null;
+  let bestScore = 0;
+
+  for (const match of data.matches) {
+    const segment = String(match?.segment || '');
+    const translation = String(match?.translation || '').trim();
+    const qualityRaw = Number(match?.quality || 0);
+
+    if (!segment || !translation) {
+      continue;
+    }
+
+    const segmentWords = normalizeWords(segment);
+    if (!segmentWords.includes(selectedWord)) {
+      continue;
+    }
+
+    const overlap = segmentWords.reduce((count, word) => {
+      return count + (contextWords.has(word) ? 1 : 0);
+    }, 0);
+
+    const qualityScore = Number.isFinite(qualityRaw) ? qualityRaw / 1000 : 0;
+    const score = overlap * 10 + qualityScore;
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestCandidate = translation;
+    }
+  }
+
+  return bestCandidate;
 }
 
 function getCachedTranslation(cacheKey) {
@@ -106,7 +167,7 @@ async function requestMyMemoryTranslation(safeText, langPair) {
 
   const data = await response.json();
   if (data.responseStatus === 200 && data.responseData?.translatedText) {
-    return data.responseData.translatedText;
+    return data;
   }
 
   throw new Error('Translation service unavailable');
@@ -153,7 +214,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 // Mesajları dinle
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'TRANSLATE') {
-    handleTranslation(request.text, request.targetLang)
+    handleTranslation(request.text, request.targetLang, request.contextText)
       .then(translation => sendResponse({ success: true, translation }))
       .catch(error => sendResponse({ success: false, error: error.message }));
     return true; // Async response için gerekli
@@ -188,19 +249,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Çeviri fonksiyonu - MyMemory Free API kullanımı
-async function handleTranslation(text, targetLang = 'tr') {
+async function handleTranslation(text, targetLang = 'tr', contextText = null) {
   const safeText = String(text || '').trim();
   if (!safeText) return '';
 
   const normalizedTargetLang = normalizeLanguageCode(targetLang);
-  const sourceLang = detectSourceLanguage(safeText);
+  const normalizedContextText = contextText ? String(contextText).trim() : '';
+  const sourceLang = detectSourceLanguage(normalizedContextText || safeText);
   const langPair = `${sourceLang}|${normalizedTargetLang}`;
+  const contextSignature = buildContextSignature(normalizedContextText);
+  const isSingleWord = /^[-'\p{L}\p{N}]{2,}$/u.test(safeText);
 
   if (sourceLang === normalizedTargetLang) {
     return safeText;
   }
 
-  const cacheKey = getTranslationCacheKey(safeText, sourceLang, normalizedTargetLang);
+  const cacheKey = getTranslationCacheKey(safeText, sourceLang, normalizedTargetLang, contextSignature);
   const cachedTranslation = getCachedTranslation(cacheKey);
   if (cachedTranslation) {
     return cachedTranslation;
@@ -209,7 +273,21 @@ async function handleTranslation(text, targetLang = 'tr') {
   if (!isTranslationBreakerOpen()) {
     for (let attempt = 0; attempt <= TRANSLATION_MAX_RETRIES; attempt++) {
       try {
-        const translatedText = await requestMyMemoryTranslation(safeText, langPair);
+        const translationData = await requestMyMemoryTranslation(safeText, langPair);
+        let translatedText = translationData.responseData.translatedText;
+
+        if (isSingleWord && normalizedContextText) {
+          const contextAware = pickContextAwareTranslation(
+            translationData,
+            safeText,
+            normalizedContextText
+          );
+
+          if (contextAware) {
+            translatedText = contextAware;
+          }
+        }
+
         setCachedTranslation(cacheKey, translatedText);
         onTranslationSuccess();
         return translatedText;

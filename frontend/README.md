@@ -66,6 +66,24 @@ npm run lint     # Run ESLint
 - `postcss.config.mjs` - PostCSS & Tailwind configuration
 - `components.json` - Shadcn UI configuration
 
+### Translation Provider (Ready Infrastructure)
+
+Translation layer is now provider-based and can be switched with one env variable:
+
+```bash
+NEXT_PUBLIC_TRANSLATION_PROVIDER=mymemory
+```
+
+Supported values:
+
+- `mymemory` (default, active)
+- `auto` (tries premium providers, then falls back to MyMemory)
+- `deepl`
+- `google`
+- `azure`
+
+Note: DeepL / Google / Azure handlers are scaffolded for future migration and currently fall back to MyMemory until provider integration is completed.
+
 ## 📄 License
 
 MIT License - see [LICENSE](../LICENSE) for details

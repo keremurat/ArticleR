@@ -4,6 +4,9 @@ let tooltipElement = null;
 let currentHoveredWord = null;
 let hoverTimeout = null;
 let isTooltipVisible = false;
+let pageActivationAsked = false;
+let pageActivationApproved = false;
+let pageActivationPromptElement = null;
 let settings = {
   enabled: true,
   targetLanguage: 'tr',
@@ -11,21 +14,224 @@ let settings = {
   autoSpeak: false
 };
 
+function shouldSkipActivationPrompt(urlString) {
+  try {
+    const url = new URL(urlString);
+    const hostname = url.hostname.toLowerCase();
+    const pathname = url.pathname.toLowerCase();
+
+    const isSearchEngine =
+      hostname.includes('google.') ||
+      hostname.includes('bing.com') ||
+      hostname.includes('duckduckgo.com') ||
+      hostname.includes('yandex.') ||
+      hostname.includes('search.yahoo.com');
+
+    if (!isSearchEngine) {
+      return false;
+    }
+
+    if (hostname.includes('google.') && pathname === '/search') {
+      return true;
+    }
+
+    if (hostname.includes('bing.com') && pathname === '/search') {
+      return true;
+    }
+
+    if (hostname.includes('duckduckgo.com') && pathname === '/') {
+      return true;
+    }
+
+    if (hostname.includes('yandex.') && pathname.includes('/search')) {
+      return true;
+    }
+
+    if (hostname.includes('search.yahoo.com')) {
+      return true;
+    }
+  } catch (_) {}
+
+  return false;
+}
+
+function askPageActivation() {
+  if (pageActivationAsked) {
+    return pageActivationApproved;
+  }
+
+  pageActivationAsked = true;
+
+  try {
+    createPageActivationPrompt();
+  } catch (error) {
+    pageActivationApproved = true;
+  }
+
+  return pageActivationApproved;
+}
+
+function removePageActivationPrompt() {
+  if (!pageActivationPromptElement) {
+    return;
+  }
+
+  pageActivationPromptElement.remove();
+  pageActivationPromptElement = null;
+}
+
+function createPageActivationPrompt() {
+  if (pageActivationPromptElement || !document.body) {
+    return;
+  }
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'articler-page-activation';
+  wrapper.className = 'articler-page-activation';
+  wrapper.innerHTML = `
+    <div class="articler-page-activation-backdrop" data-action="skip"></div>
+    <div class="articler-page-activation-dialog" role="dialog" aria-modal="true" aria-labelledby="articler-page-activation-title">
+      <h3 id="articler-page-activation-title">ArticleR bu sitede aktif edilsin mi?</h3>
+      <p>Aktifleştirirseniz bu sitede kelime üzerine geldiğinizde anında çeviri gösterilir.</p>
+      <div class="articler-page-activation-actions">
+        <button class="articler-page-btn articler-page-btn-secondary" type="button" data-action="skip">Hayır, Şimdilik Pasif</button>
+        <button class="articler-page-btn articler-page-btn-primary" type="button" data-action="activate">Evet, Aktif Et</button>
+      </div>
+      <div class="articler-page-activation-footer">
+        <a class="articler-page-activation-brand-link" href="https://eistatistik.com/" target="_blank" rel="noopener noreferrer" title="eistatistik.com">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="${chrome.runtime.getURL('public/branding/logobeyaz-reduce.png')}">
+            <img src="${chrome.runtime.getURL('public/branding/logosiyah_reduce.png')}" alt="Firma logosu">
+          </picture>
+        </a>
+        <span>tarafından geliştirildi</span>
+      </div>
+    </div>
+  `;
+
+  const activateBtn = wrapper.querySelector('[data-action="activate"]');
+  const skipTargets = wrapper.querySelectorAll('[data-action="skip"]');
+  let cleanupObserver = null;
+
+  const decide = (approved) => {
+    pageActivationApproved = approved;
+    document.removeEventListener('keydown', onKeydown, true);
+    cleanupObserver?.disconnect();
+    removePageActivationPrompt();
+  };
+
+  activateBtn?.addEventListener('click', () => decide(true));
+  skipTargets.forEach((element) => {
+    element.addEventListener('click', () => decide(false));
+  });
+
+  const onKeydown = (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      decide(false);
+    }
+  };
+
+  document.addEventListener('keydown', onKeydown, true);
+
+  cleanupObserver = new MutationObserver(() => {
+    if (!document.body.contains(wrapper)) {
+      document.removeEventListener('keydown', onKeydown, true);
+      cleanupObserver.disconnect();
+    }
+  });
+
+  cleanupObserver.observe(document.body, { childList: true, subtree: true });
+
+  document.body.appendChild(wrapper);
+  pageActivationPromptElement = wrapper;
+
+  requestAnimationFrame(() => {
+    wrapper.classList.add('visible');
+    activateBtn?.focus({ preventScroll: true });
+  });
+}
+
+function initializePageActivationPrompt(promptNow = true) {
+  if (!settings.enabled) {
+    pageActivationAsked = true;
+    pageActivationApproved = false;
+    return;
+  }
+
+  if (shouldSkipActivationPrompt(window.location.href)) {
+    pageActivationAsked = true;
+    pageActivationApproved = false;
+    return;
+  }
+
+  pageActivationAsked = false;
+  pageActivationApproved = false;
+
+  if (!promptNow) {
+    return;
+  }
+
+  setTimeout(() => {
+    if (!pageActivationAsked) {
+      askPageActivation();
+    }
+  }, 250);
+}
+
 // Ayarları yükle
 chrome.storage.sync.get(['settings'], (result) => {
   if (result.settings) {
     settings = { ...settings, ...result.settings };
   }
+
+  initializePageActivationPrompt(true);
 });
 
 // Ayar değişikliklerini dinle
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'sync' && changes.settings) {
+    const previousSettings = { ...settings };
     settings = { ...settings, ...changes.settings.newValue };
+
+    if (!settings.enabled) {
+      pageActivationAsked = true;
+      pageActivationApproved = false;
+      hideTooltip();
+      return;
+    }
+
+    if (!previousSettings.enabled && settings.enabled) {
+      pageActivationAsked = true;
+      pageActivationApproved = true;
+      return;
+    }
+
+    if (!pageActivationAsked) {
+      initializePageActivationPrompt(false);
+    }
   }
 });
 
 // Kelime seçimi için yardımcı fonksiyon
+function extractSentenceFromText(text, start, end) {
+  if (!text) return null;
+
+  let left = Math.max(0, start);
+  let right = Math.min(text.length, Math.max(start, end));
+
+  while (left > 0 && !/[.!?;\n]/.test(text[left - 1])) {
+    left--;
+  }
+
+  while (right < text.length && !/[.!?;\n]/.test(text[right])) {
+    right++;
+  }
+
+  const sentence = text.slice(left, right).replace(/\s+/g, ' ').trim();
+  return sentence.length >= 3 ? sentence : null;
+}
+
 function getWordAtPoint(x, y) {
   const range = document.caretRangeFromPoint(x, y);
   if (!range) return null;
@@ -61,6 +267,7 @@ function getWordAtPoint(x, y) {
 
   return {
     word: word,
+    contextText: extractSentenceFromText(text, start, end),
     range: wordRange,
     rect: wordRange.getBoundingClientRect()
   };
@@ -174,7 +381,7 @@ function showTooltip(wordData) {
   tooltipElement.classList.add('visible');
 
   // Çeviriyi al
-  translateWord(wordData.word);
+  translateWord(wordData.word, wordData.contextText);
 }
 
 // Tooltip'i gizle
@@ -187,12 +394,13 @@ function hideTooltip() {
 }
 
 // Kelimeyi çevir
-async function translateWord(word) {
+async function translateWord(word, contextText) {
   try {
     const response = await chrome.runtime.sendMessage({
       type: 'TRANSLATE',
       text: word,
-      targetLang: settings.targetLanguage
+      targetLang: settings.targetLanguage,
+      contextText: contextText || null
     });
 
     if (response.success && tooltipElement && isTooltipVisible) {
@@ -255,6 +463,14 @@ function saveWord() {
 document.addEventListener('mousemove', (e) => {
   if (!settings.enabled) return;
 
+  if (pageActivationPromptElement) {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = null;
+    }
+    return;
+  }
+
   if (shouldIgnoreHoverTarget(e.target)) {
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -271,6 +487,16 @@ document.addEventListener('mousemove', (e) => {
   // Yeni timeout başlat
   hoverTimeout = setTimeout(() => {
     const wordData = getWordAtPoint(e.clientX, e.clientY);
+
+    if (wordData && !pageActivationAsked) {
+      if (!askPageActivation()) {
+        return;
+      }
+    }
+
+    if (wordData && !pageActivationApproved) {
+      return;
+    }
 
     if (wordData && (!currentHoveredWord || currentHoveredWord.word !== wordData.word)) {
       showTooltip(wordData);

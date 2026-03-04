@@ -73,12 +73,14 @@ export function PDFViewer() {
   } = usePDF()
 
   const [selectedText, setSelectedText] = useState<string | null>(null)
+  const [selectedContext, setSelectedContext] = useState<string | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [isNotebookOpen, setIsNotebookOpen] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
   const [selectedHighlight, setSelectedHighlight] = useState<HighlightColor | null>(null)
   const [isHoverMode, setIsHoverMode] = useState(true) // Hover çeviri modu
   const [hoveredWord, setHoveredWord] = useState<string | null>(null)
+  const [hoveredContext, setHoveredContext] = useState<string | null>(null)
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 })
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -91,6 +93,24 @@ export function PDFViewer() {
     },
     [setNumPages]
   )
+
+  const extractSentenceFromText = useCallback((fullText: string, startIndex: number, endIndex: number) => {
+    if (!fullText) return null
+
+    let left = Math.max(0, startIndex)
+    let right = Math.min(fullText.length, Math.max(startIndex, endIndex))
+
+    while (left > 0 && !/[.!?;\n]/.test(fullText[left - 1])) {
+      left--
+    }
+
+    while (right < fullText.length && !/[.!?;\n]/.test(fullText[right])) {
+      right++
+    }
+
+    const sentence = fullText.slice(left, right).replace(/\s+/g, " ").trim()
+    return sentence.length >= 3 ? sentence : null
+  }, [])
 
   // Handle text selection
   const handleMouseUp = useCallback(() => {
@@ -121,24 +141,33 @@ export function PDFViewer() {
         }
         window.getSelection()?.removeAllRanges()
       } else if (rect) {
+        let contextText: string | null = null
+        if (range && range.startContainer.nodeType === Node.TEXT_NODE) {
+          const nodeText = range.startContainer.textContent || ""
+          contextText = extractSentenceFromText(nodeText, range.startOffset, range.endOffset)
+        }
+
         setSelectedText(text)
+        setSelectedContext(contextText)
         setTooltipPosition({
           x: rect.left + rect.width / 2,
           y: rect.bottom,
         })
       }
     }
-  }, [selectedHighlight, currentPage, addHighlight])
+  }, [selectedHighlight, currentPage, addHighlight, extractSentenceFromText])
 
   // Close tooltip
   const closeTooltip = useCallback(() => {
     setSelectedText(null)
+    setSelectedContext(null)
     setHoveredWord(null)
+    setHoveredContext(null)
     window.getSelection()?.removeAllRanges()
   }, [])
 
   // Get word at cursor position
-  const getWordAtPoint = useCallback((x: number, y: number): string | null => {
+  const getWordAtPoint = useCallback((x: number, y: number): { word: string; context: string | null } | null => {
     const element = document.elementFromPoint(x, y)
     if (!element) return null
 
@@ -168,7 +197,10 @@ export function PDFViewer() {
 
           const word = fullText.slice(start, end).trim()
           if (word.length >= 2 && word.length <= 50) {
-            return word
+            return {
+              word,
+              context: extractSentenceFromText(fullText, start, end),
+            }
           }
         }
       }
@@ -177,11 +209,11 @@ export function PDFViewer() {
     // Fallback: return first word if short text
     const words = text.split(/\s+/)
     if (words.length === 1 && words[0].length >= 2 && words[0].length <= 50) {
-      return words[0]
+      return { word: words[0], context: null }
     }
 
     return null
-  }, [])
+  }, [extractSentenceFromText])
 
   // Handle mouse move for hover translation
   const handleMouseMove = useCallback(
@@ -195,13 +227,15 @@ export function PDFViewer() {
 
       // Debounce: wait 400ms before showing tooltip
       hoverTimeoutRef.current = setTimeout(() => {
-        const word = getWordAtPoint(e.clientX, e.clientY)
+        const hoveredData = getWordAtPoint(e.clientX, e.clientY)
 
-        if (word && word !== hoveredWord) {
-          setHoveredWord(word)
+        if (hoveredData && hoveredData.word !== hoveredWord) {
+          setHoveredWord(hoveredData.word)
+          setHoveredContext(hoveredData.context)
           setHoverPosition({ x: e.clientX, y: e.clientY + 10 })
-        } else if (!word) {
+        } else if (!hoveredData) {
           setHoveredWord(null)
+          setHoveredContext(null)
         }
       }, 400)
     },
@@ -214,6 +248,7 @@ export function PDFViewer() {
       clearTimeout(hoverTimeoutRef.current)
     }
     setHoveredWord(null)
+    setHoveredContext(null)
   }, [])
 
   // Cleanup timeout on unmount
@@ -695,12 +730,25 @@ export function PDFViewer() {
 
         {/* Translation Tooltip - for text selection */}
         {selectedText && (
-          <TranslationTooltip selectedText={selectedText} position={tooltipPosition} onClose={closeTooltip} />
+          <TranslationTooltip
+            selectedText={selectedText}
+            contextText={selectedContext}
+            position={tooltipPosition}
+            onClose={closeTooltip}
+          />
         )}
 
         {/* Hover Translation Tooltip */}
         {hoveredWord && !selectedText && (
-          <TranslationTooltip selectedText={hoveredWord} position={hoverPosition} onClose={() => setHoveredWord(null)} />
+          <TranslationTooltip
+            selectedText={hoveredWord}
+            contextText={hoveredContext}
+            position={hoverPosition}
+            onClose={() => {
+              setHoveredWord(null)
+              setHoveredContext(null)
+            }}
+          />
         )}
 
         {/* Word Notebook Sheet */}
